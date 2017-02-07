@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>LLVM-vs2014</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -142,6 +142,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="tree\criterion.cpp" />
+    <ClCompile Include="tree\feature_label.cpp" />
+    <ClCompile Include="tree\param.cpp" />
+    <ClCompile Include="utils\config.cpp" />
+    <ClCompile Include="utils\log.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="tree\criterion.h" />
+    <ClInclude Include="tree\feature_label.h" />
+    <ClInclude Include="tree\param.h" />
+    <ClInclude Include="utils\config.h" />
+    <ClInclude Include="utils\log.h" />
+    <ClInclude Include="utils\random.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
