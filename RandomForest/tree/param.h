@@ -11,7 +11,13 @@ namespace Yuki {
 	class DTParam {
 	public:
 		
-		DTParam(const char *cfg_file) {
+		DTParam(const char *cfg_file)
+			: type_(REGRESSION), // default as regression
+			  max_depth_(-1), max_leaves_(-1), // -1 as not define
+			  min_leaf_samples_(1), // at least 1 sample on a leaf
+			  feature_size_(-1), label_size_(-1), // must define
+			  iterations_(1) // default 1 iteration 
+		{
 			Config config(cfg_file);
 			config.get("TYPE", type_);
 			config.get("MAX_DEPTH", max_depth_);
@@ -20,6 +26,10 @@ namespace Yuki {
 			config.get("FEATURE_SIZE", feature_size_);
 			config.get("LABEL_SIZE", label_size_);
 			config.get("ITERATIONS", iterations_);
+
+			// must config
+			CHECK(feature_size_ != -1);
+			CHECK(label_size_ != -1);
 		}
 
 		int type()				const { return type_; }

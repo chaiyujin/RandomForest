@@ -148,6 +148,7 @@
     <ClCompile Include="tree\feature_label.cpp" />
     <ClCompile Include="tree\param.cpp" />
     <ClCompile Include="tree\splitter.cpp" />
+    <ClCompile Include="tree\tree.cpp" />
     <ClCompile Include="utils\config.cpp" />
     <ClCompile Include="utils\log.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="tree\feature_label.h" />
     <ClInclude Include="tree\param.h" />
     <ClInclude Include="tree\splitter.h" />
+    <ClInclude Include="tree\tree.h" />
     <ClInclude Include="utils\config.h" />
     <ClInclude Include="utils\log.h" />
     <ClInclude Include="utils\random.h" />

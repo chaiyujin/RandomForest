@@ -60,6 +60,9 @@
     <ClInclude Include="tree\splitter.h">
       <Filter>Header Files\tree</Filter>
     </ClInclude>
+    <ClInclude Include="tree\tree.h">
+      <Filter>Header Files\tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\log.cpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files\check</Filter>
     </ClCompile>
     <ClCompile Include="tree\splitter.cpp">
+      <Filter>Source Files\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="tree\tree.cpp">
       <Filter>Source Files\tree</Filter>
     </ClCompile>
   </ItemGroup>
