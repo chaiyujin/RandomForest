@@ -2,6 +2,7 @@
 #ifndef __TREE_CRITERION_H__
 #define __TREE_CRITERION_H__
 
+#include "../utils/yuki.h"
 #include "feature_label.h"
 #include <vector>
 
@@ -12,41 +13,42 @@ namespace Yuki {
 	class Criterion {
 	public:
 
-		Criterion(std::vector<Tuple *>& data, const DTParam &param);
+		Criterion(DataSet &data, const DTParam &param, double all_samples_weight = -1);
 
 		virtual ~Criterion() {}
 
-		double impurity();
-		std::pair<double, double> children_impurity();
-
 		// sort features by dim
 		void sort(int dim);
-		// update the split position
+		// update the split position, it's better to update in one direction
 		void update(int new_pos);
+
+		double proxy_impurity_improvement() const;
+		double impurity_improvement();
 
 	protected:
 		// tuples for current node
-		std::vector<Tuple *> &tuples;
+		DataSet &tuples;
 		// global param, passed.
 		const DTParam &param;
+		// total weight of all samples
+		double weighted_all_samples;
 		// split position, [0, pos - 1] in left and [pos, size - 1] in right
 		int pos;
-		// best improvment
-		double best_improvment;
-		int best_pos;
 
 		// for impurity
 		double sq_sum_total;
 		std::vector<double> sum_total;
-		double weighted_n_samples;
+		std::vector<double> sum_left, sum_right;
+		double weighted_n_total;
+		double weighted_n_left, weighted_n_right;
 
-
-		// cache
-		double impurity_cache;
-		std::pair<double, double> ch_impurity_cache;
-
-		// reset
+		// init and reset
+		void init();
 		void reset();
+
+		// call once for the real improvement calculation
+		double impurity();
+		std::pair<double, double> children_impurity();
 	};
 }
 

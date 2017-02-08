@@ -5,6 +5,7 @@
 #include "../utils/log.h"
 #include "param.h"
 #include <vector>
+#include <algorithm>
 
 /* Feature and label should change according to data */
 namespace Yuki {
@@ -13,6 +14,7 @@ namespace Yuki {
 	class Label {
 	public:
 		Label() {}
+
 		size_t read(FILE *fp, int size) {
 			v.resize(size);
 			return fread(v.data(), sizeof(T), size, fp);
@@ -33,6 +35,7 @@ namespace Yuki {
 	class Feature {
 	public:
 		Feature() {}
+
 		size_t read(FILE *fp, int size) {
 			v.resize(size);
 			return fread(v.data(), sizeof(T), size, fp);
@@ -45,15 +48,42 @@ namespace Yuki {
 			CHECK(0 <= index && index < v.size());
 			return v[index];
 		}
+		size_t size() const { return v.size(); }
+		template <class U>
+		friend bool less_than(const Feature<U> &f0, const Feature<U> &f1, int dim);
 	private:
 		std::vector<T> v;
 	};
 
+	/* the sort is designed for the feature */
+	template <class T>
+	inline bool less_than(const Feature<T> &f0, const Feature<T> &f1, int dim) {
+#define CMP_FEATURE(i) \
+		{if (f0[i] < f1[i]) return true;\
+		else if (f0[i] > f1[i]) return false;}
+
+		CMP_FEATURE(dim);
+
+		int delta = std::max(dim, (int)f0.size() - dim - 1);
+		for (int i = 1; i <= delta; ++i) {
+			int j = dim - i;
+			if (j >= 0) CMP_FEATURE(j);
+			j = dim + i;
+			if (j < f0.size()) CMP_FEATURE(j);
+		}
+#undef CMP_FEATURE
+		return false;
+	}
+
+	/* define the data feature and label */
+	typedef Feature<int> DFeature;
+	typedef Label<float> DLabel;
+
 	class Tuple {
 	public:
 		// basic data
-		Feature<float> X;
-		Label<int>     Y;
+		DFeature X;
+		DLabel   Y;
 		
 		// auxillary info
 		size_t  id;
@@ -70,16 +100,17 @@ namespace Yuki {
 	public:
 		TupleSorter(int i) : dim(i) {}
 
-		bool operator()(const Tuple *& t0, const Tuple *& t1) {
-			return t0->X[dim] < t1->X[dim];
+		bool operator()(Tuple * const &t0, Tuple * const &t1) {
+			return less_than(t0->X, t1->X, dim);
 		}
 
 	private:
 		int dim;
 	};
 
+	typedef std::vector<Tuple *> DataSet;
 
-	std::vector<Tuple *> read_data(
+	DataSet read_data(
 		const char *feat_file_name,
 		const char *label_file_name,
 		const DTParam &param);

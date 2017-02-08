@@ -19,6 +19,7 @@ namespace Yuki {
 			config.get("MIN_LEAF_SAMPLES", min_leaf_samples_);
 			config.get("FEATURE_SIZE", feature_size_);
 			config.get("LABEL_SIZE", label_size_);
+			config.get("ITERATIONS", iterations_);
 		}
 
 		int type()				const { return type_; }
@@ -28,7 +29,7 @@ namespace Yuki {
 		int min_leaf_samples()	const { return min_leaf_samples_; }
 		int feature_size()		const { return feature_size_; }
 		int label_size()		const { return label_size_; }
-
+		int iterations()		const { return iterations_; }
 	private:
 		/* for tree */
 		int type_;
@@ -39,6 +40,9 @@ namespace Yuki {
 		/* for data */
 		int feature_size_;
 		int label_size_;
+
+		/* for train */
+		int iterations_;
 	};
 
 }

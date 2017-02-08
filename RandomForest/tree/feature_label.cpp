@@ -3,7 +3,7 @@
 
 namespace Yuki {
 
-	std::vector<Tuple *> read_data(
+	DataSet read_data(
 		const char *feat_file_name,
 		const char *label_file_name,
 		const DTParam &param) {
@@ -12,7 +12,7 @@ namespace Yuki {
 				 "X from: %s\n\t"  "Y from: %s\n", 
 				 feat_file_name, label_file_name);
 
-		std::vector<Tuple *> ret;
+		DataSet ret;
 
 		if (!std::ifstream(feat_file_name) || 
 			!std::ifstream(label_file_name)) {
