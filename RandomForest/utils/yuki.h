@@ -21,4 +21,15 @@
 template <class T>
 inline T sqr(T x) { return x * x; }
 
+// equal 
+inline bool equal(float x, float y) {
+	return fabs(x - y) < 0.000001;
+}
+inline bool equal(double x, double y) {
+	return fabs(x - y) < 0.00000001;
+}
+inline bool equal(int x, int y) {
+	return x == y;
+}
+
 #endif  // !__YUKI_H__

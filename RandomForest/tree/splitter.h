@@ -12,7 +12,7 @@ namespace Yuki {
 		Splitter(DataSet &data, const DTParam &param, double all_samples_weight = -1);
 		virtual ~Splitter() {}
 
-		// to-do better
+		// to-do better for un-stable sorting
 		// return true if successfully split, the result will be written into set_a and set_b
 		bool split_best(DataSet &set_a, DataSet &set_b, std::pair<double, double> &child_impurity);
 

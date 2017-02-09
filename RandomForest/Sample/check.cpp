@@ -162,6 +162,59 @@ void check_split() {
 	return;
 }
 
+void check_tree_1() {
+	DTParam param("Sample/config.cfg");
+	cout << param.max_depth() << " "
+		<< param.max_leaves() << " "
+		<< param.min_leaf_samples() << endl;
+	cout << param.is_regression() << endl;
+
+	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+	DataSet tuples_sub;
+
+	for (int i = 0; i < 600; ++i) {
+		tuples_sub.emplace_back(tuples[i]);
+		for (int j = 0; j < i; ++j) {
+			if (tuples_sub[i]->X == tuples_sub[j]->X) {
+				cout << j << "error!\n";
+			}
+		}
+	}
+
+	DecisionTree tree("Sample/config.cfg");
+	tree.fit(tuples_sub);
+
+	cout << "Fit over\n";
+
+	Range(i, tuples_sub.size()) {
+		DFeature query = tuples_sub[i]->X;
+		DLabel res = tree.predict(query);
+		if (!(res == tuples_sub[i]->Y)) {
+			cout << i << " not equal\n";
+			Range(k, tuples_sub.size()) {
+				if (res == tuples_sub[k]->Y) {
+					cout << "\tequal to " << k << endl;
+
+					Range(j, query.size()) {
+						cout << query[j] << "\t";
+					}
+					cout << endl;
+					Range(j, query.size()) {
+						cout << tuples_sub[k]->X[j] << "\t";
+					}
+					cout << endl;
+
+					break;
+				}
+			}
+		}
+	}
+
+	
+
+	system("pause");
+}
+
 void check_random() {
 
 	Yuki::Random random;

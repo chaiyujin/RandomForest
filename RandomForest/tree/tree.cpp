@@ -55,9 +55,6 @@ namespace Yuki {
 			GrowJob *job_ptr = job_queue.top();
 			job_queue.pop();
 
-			// debug
-			LOG::log("%priority: %f\n", job_ptr->priority);
-
 			std::vector<GrowJob *> children_jobs;
 			TreeNode *ret = job_ptr->work(children_jobs);
 			if (!ret) {
@@ -81,14 +78,29 @@ namespace Yuki {
 		return succ;
 	}
 
+	DLabel DecisionTree::predict(const DFeature & feature) {
+		DLabel ret;
+		TreeNode *cur = root;
+		while (cur != nullptr) {
+			if (cur->is_leaf()) {
+				new (&ret) DLabel(cur->label());
+				cur = cur->left_child();
+			}
+			else {
+				cur = cur->which_child(feature);
+			}
+		}
+		
+		return ret;
+	}
 
 	/* Grow Job */
 
 	TreeNode *GrowJob::work(std::vector<GrowJob *> &children_jobs) {
 		TreeNode *node = nullptr;
 
-		if (depth >= param.max_depth() || // reach the max depth
-			tuples.size() < param.split_limit()/* no enough to split */) { 
+		if ((param.max_depth() > 0 && depth >= param.max_depth()) || // reach the max depth
+			tuples.size() < param.split_limit()/* no enough to split */) {
 			node = make_leaf();
 		}
 		else {
@@ -110,15 +122,18 @@ namespace Yuki {
 				// split
 				node->set_split_feature(splitter.best_split_feature());
 				node->set_split_dim(splitter.best_dim());
-
 			}
 			else {
 				node = make_leaf();
 			}
 		}
 
+		if (node) {
+			node->set_depth(depth);
+		}
+		
 		// update father
-		if (father) {
+		if (node && father) {
 			if (child_idx == 0)
 				father->set_left_child(node);
 			else if (child_idx == 1)
@@ -145,3 +160,4 @@ namespace Yuki {
 		return node;
 	}
 }
+

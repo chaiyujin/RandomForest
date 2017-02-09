@@ -16,15 +16,16 @@ namespace Yuki {
 			: is_leaf_(leaf),
 			  left_child_(nullptr), right_child_(nullptr) {}
 
-		int which_child(const DFeature &query_feature) {
-			if (less_than(query_feature, split_feature_, split_dim_)) 
-				return LEFT_CHILD;
+		TreeNode *which_child(const DFeature &query_feature) {
+			if (less_than(query_feature, split_feature_, split_dim_))
+				return left_child_;
 			else 
-				return RIGHT_CHILD;
+				return right_child_;
 		}
 
 		/* set method */
 
+		void set_depth(int d) { depth_ = d; }
 		void set_left_child(TreeNode *p) { left_child_ = p; }
 		void set_right_child(TreeNode *p) { right_child_ = p; }
 		void set_split_feature(const DFeature &f) { new (&split_feature_) DFeature(f); }
@@ -33,13 +34,16 @@ namespace Yuki {
 
 		/* get method */
 
+		int depth() const { return depth_; }
+		bool is_leaf() const { return is_leaf_; }
 		TreeNode *left_child() { return left_child_; }
 		TreeNode *right_child() { return right_child_; }
 		//const DFeature &split_feature() { return split_feature_; }
 		//int split_dim() { return split_dim_; }
-		const DLabel &label() { return label_; }
+		const DLabel &label() const { return label_; }
 
 	private:
+		int depth_;
 		bool is_leaf_;
 		// non-leaf has left and right children
 		TreeNode *left_child_, *right_child_;

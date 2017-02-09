@@ -24,11 +24,19 @@ namespace Yuki {
 			for (size_t i = 0; i < v.size(); ++i) {
 				v[i] += l.v[i];
 			}
+			return *this;
 		}
 		Label &operator*=(float f) {
 			for (size_t i = 0; i < v.size(); ++i) {
 				v[i] *= f;
 			}
+			return *this;
+		}
+		bool operator==(const Label &l) {
+			for (size_t i = 0; i < v.size(); ++i) {
+				if (!equal(v[i], l.v[i])) return false;
+			}
+			return true;
 		}
 		T &operator[](int index) {
 			CHECK(0 <= index && index < v.size());
@@ -60,6 +68,14 @@ namespace Yuki {
 			CHECK(0 <= index && index < v.size());
 			return v[index];
 		}
+
+		bool operator==(const Feature &f) {
+			for (size_t i = 0; i < v.size(); ++i) {
+				if (!equal(v[i], f.v[i])) return false;
+			}
+			return true;
+		}
+
 		size_t size() const { return v.size(); }
 		template <class U>
 		friend bool less_than(const Feature<U> &f0, const Feature<U> &f1, int dim);

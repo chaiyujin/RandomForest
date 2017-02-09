@@ -13,9 +13,9 @@ namespace Yuki {
 		
 		DTParam(const char *cfg_file)
 			: type_(REGRESSION), // default as regression
-			  max_depth_(-1), max_leaves_(-1), // -1 as not define
+			  max_depth_(0), max_leaves_(0), // 0 as not define
 			  min_leaf_samples_(1), // at least 1 sample on a leaf
-			  split_limit_(-1), // no split limit
+			  split_limit_(0), // no split limit
 			  feature_size_(-1), label_size_(-1), // must define
 			  iterations_(1) // default 1 iteration 
 		{

@@ -23,29 +23,30 @@ namespace Yuki {
 
 				criterion.update(pos);
 				double proxy = criterion.proxy_impurity_improvement();
+
 				if (proxy > best_proxy) {
 					best_proxy = proxy;
 					best_pos_ = pos;
 					best_dim_ = dim;
 					found = true;
-
-					// update split feature
-					new (&best_split_feature_) DFeature(tuples[pos]->X);
-
-					// if sort is not stable
-					new (&set_a) DataSet(tuples.begin(), tuples.begin() + pos);
-					new (&set_b) DataSet(tuples.begin() + pos, tuples.end());
-
-					// update the child impurity
-					child_impurity = criterion.children_impurity_cache();
 				}
-
 			}
 		}
 
 		// if sort is stable
-		/*if (found) {
-		}*/
+		if (found) {
+			criterion.sort(best_dim_);
+			criterion.update(best_pos_);
+
+			// update split feature
+			new (&best_split_feature_) DFeature(tuples[best_pos_]->X);
+
+			new (&set_a) DataSet(tuples.begin(), tuples.begin() + best_pos_);
+			new (&set_b) DataSet(tuples.begin() + best_pos_, tuples.end());
+
+			// update the child impurity
+			child_impurity = criterion.children_impurity();
+		}
 
 		return found;
 	}

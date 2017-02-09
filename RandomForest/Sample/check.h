@@ -6,6 +6,7 @@
 #include "../tree/feature_label.h"
 #include "../tree/criterion.h"
 #include "../tree/splitter.h"
+#include "../tree/tree.h"
 #include "../utils/random.h"
 
 #include <iostream>
@@ -13,5 +14,6 @@
 void check_criterion();
 void check_random();
 void check_split();
+void check_tree_1();
 
 #endif

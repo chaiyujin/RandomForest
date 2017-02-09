@@ -87,8 +87,6 @@ namespace Yuki {
 		ret.first /= param.label_size();
 		ret.second /= param.label_size();
 
-		ch_impurity_cache_ = ret;
-
 		return ret;
 	}
 
