@@ -19,6 +19,17 @@ namespace Yuki {
 			v.resize(size);
 			return fread(v.data(), sizeof(T), size, fp);
 		}
+		Label &operator+=(const Label &l) {
+			CHECK(v.size() == l.v.size());
+			for (size_t i = 0; i < v.size(); ++i) {
+				v[i] += l.v[i];
+			}
+		}
+		Label &operator*=(float f) {
+			for (size_t i = 0; i < v.size(); ++i) {
+				v[i] *= f;
+			}
+		}
 		T &operator[](int index) {
 			CHECK(0 <= index && index < v.size());
 			return v[index];
@@ -27,6 +38,7 @@ namespace Yuki {
 			CHECK(0 <= index && index < v.size());
 			return v[index];
 		}
+		size_t size() const { return v.size(); }
 	private:
 		std::vector<T> v;
 	};

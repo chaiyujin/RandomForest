@@ -15,6 +15,7 @@ namespace Yuki {
 			: type_(REGRESSION), // default as regression
 			  max_depth_(-1), max_leaves_(-1), // -1 as not define
 			  min_leaf_samples_(1), // at least 1 sample on a leaf
+			  split_limit_(-1), // no split limit
 			  feature_size_(-1), label_size_(-1), // must define
 			  iterations_(1) // default 1 iteration 
 		{
@@ -26,6 +27,7 @@ namespace Yuki {
 			config.get("FEATURE_SIZE", feature_size_);
 			config.get("LABEL_SIZE", label_size_);
 			config.get("ITERATIONS", iterations_);
+			config.get("SPLIT_LIMIT", split_limit_);
 
 			// must config
 			CHECK(feature_size_ != -1);
@@ -40,12 +42,15 @@ namespace Yuki {
 		int feature_size()		const { return feature_size_; }
 		int label_size()		const { return label_size_; }
 		int iterations()		const { return iterations_; }
+		int split_limit()		const { return split_limit_; }
+
 	private:
 		/* for tree */
 		int type_;
 		int max_depth_;
 		int max_leaves_;
 		int min_leaf_samples_;
+		int split_limit_;
 	
 		/* for data */
 		int feature_size_;

@@ -6,7 +6,7 @@ namespace Yuki {
 		  criterion(data, param, all_samples_weight) {
 	}
 
-	bool Splitter::split_best(DataSet &set_a, DataSet &set_b) {
+	bool Splitter::split_best(DataSet &set_a, DataSet &set_b, std::pair<double, double> &child_impurity) {
 		bool found = false;
 		double best_proxy = -DBL_MAX;
 
@@ -18,8 +18,8 @@ namespace Yuki {
 			criterion.sort(dim);
 		
 			// find the best split
-			for (int pos = param.min_leaf_samples();
-				 pos + param.min_leaf_samples() <= tuples.size(); ++pos) {
+			for (int pos = 1;
+				 pos + 1 <= tuples.size(); ++pos) {
 
 				criterion.update(pos);
 				double proxy = criterion.proxy_impurity_improvement();
@@ -35,6 +35,9 @@ namespace Yuki {
 					// if sort is not stable
 					new (&set_a) DataSet(tuples.begin(), tuples.begin() + pos);
 					new (&set_b) DataSet(tuples.begin() + pos, tuples.end());
+
+					// update the child impurity
+					child_impurity = criterion.children_impurity_cache();
 				}
 
 			}

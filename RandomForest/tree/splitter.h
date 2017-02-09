@@ -14,7 +14,7 @@ namespace Yuki {
 
 		// to-do better
 		// return true if successfully split, the result will be written into set_a and set_b
-		bool split_best(DataSet &set_a, DataSet &set_b);
+		bool split_best(DataSet &set_a, DataSet &set_b, std::pair<double, double> &child_impurity);
 
 		int best_dim() { return best_dim_; }
 		int best_pos() { return best_pos_; }

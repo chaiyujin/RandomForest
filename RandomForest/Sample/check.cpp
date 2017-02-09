@@ -120,12 +120,13 @@ void check_split() {
 	DataSet tuples_sub;
 	DataSet set_a, set_b;
 
-	for (int i = 0; i < 20; ++i) {
+	for (int i = 0; i < 6; ++i) {
 		tuples_sub.emplace_back(tuples[i]);
 	}
 
 	Splitter splitter(tuples_sub, param);
-	cout << splitter.split_best(set_a, set_b) << endl;
+	std::pair<double, double> ch_imp;
+	cout << splitter.split_best(set_a, set_b, ch_imp) << endl;
 
 	int dim = splitter.best_dim();
 	int pos = splitter.best_pos();

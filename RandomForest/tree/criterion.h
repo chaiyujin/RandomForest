@@ -25,6 +25,8 @@ namespace Yuki {
 		double proxy_impurity_improvement() const;
 		double impurity_improvement();
 
+		std::pair<double, double> children_impurity_cache() { return ch_impurity_cache_; }
+
 	protected:
 		// tuples for current node
 		DataSet &tuples;
@@ -49,6 +51,7 @@ namespace Yuki {
 		// call once for the real improvement calculation
 		double impurity();
 		std::pair<double, double> children_impurity();
+		std::pair<double, double> ch_impurity_cache_;
 	};
 }
 

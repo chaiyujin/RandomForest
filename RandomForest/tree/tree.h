@@ -7,6 +7,83 @@
 #include "splitter.h"
 
 namespace Yuki {
+#define LEFT_CHILD  0
+#define RIGHT_CHILD 1
+
+	class TreeNode {
+	public:
+		TreeNode(bool leaf)
+			: is_leaf_(leaf),
+			  left_child_(nullptr), right_child_(nullptr) {}
+
+		int which_child(const DFeature &query_feature) {
+			if (less_than(query_feature, split_feature_, split_dim_)) 
+				return LEFT_CHILD;
+			else 
+				return RIGHT_CHILD;
+		}
+
+		/* set method */
+
+		void set_left_child(TreeNode *p) { left_child_ = p; }
+		void set_right_child(TreeNode *p) { right_child_ = p; }
+		void set_split_feature(const DFeature &f) { new (&split_feature_) DFeature(f); }
+		void set_split_dim(int dim) { split_dim_ = dim; }
+		void set_label(const DLabel &l) { new (&label_) DLabel(l); }
+
+		/* get method */
+
+		TreeNode *left_child() { return left_child_; }
+		TreeNode *right_child() { return right_child_; }
+		//const DFeature &split_feature() { return split_feature_; }
+		//int split_dim() { return split_dim_; }
+		const DLabel &label() { return label_; }
+
+	private:
+		bool is_leaf_;
+		// non-leaf has left and right children
+		TreeNode *left_child_, *right_child_;
+		// for non-leaf to determine which child
+		DFeature split_feature_;
+		int      split_dim_;
+		// for leaf, the representation label
+		DLabel label_;
+	};
+
+	class GrowJob {
+	public:
+		GrowJob(const DataSet &data_set,
+				const DTParam &param,
+				TreeNode *father, int child_idx,
+				int depth, double priority = DBL_MAX)
+			: tuples(data_set), param(param),
+			  father(father), child_idx(child_idx),
+			  depth(depth), priority(priority) {}
+
+		// return the node made, and the jobs for children if any exists.
+		TreeNode *work(std::vector<GrowJob *> &children_jobs);
+
+		double priority; // small first
+
+	private:
+		TreeNode *make_leaf();
+
+		int depth;
+		DataSet tuples;
+		const DTParam &param;
+
+		// to complete the father pointer
+		TreeNode *father;
+		int child_idx;
+	};
+
+	struct GrowJobCMP {
+	public:
+		bool operator()(GrowJob * const &j0, GrowJob * const &j1) {
+			return j1->priority < j0->priority;
+		}
+	};
+
 
 	class DecisionTree {
 	public:
@@ -30,6 +107,8 @@ namespace Yuki {
 
 		// fit with data?
 		bool is_trained;
+
+		TreeNode *root;
 	};
 
 	class DecisionTreeRegression : public DecisionTree {
