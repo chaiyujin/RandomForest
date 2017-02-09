@@ -3,7 +3,7 @@
 
 namespace Yuki {
 
-	Criterion::Criterion(DataSet& data, const DTParam &param, double all_samples_weight)
+	Criterion::Criterion(DataSet& data, const Param &param, double all_samples_weight)
 		: tuples(data), param(param), weighted_all_samples(all_samples_weight),
 		  sum_total(param.label_size()), sum_left(param.label_size()), sum_right(param.label_size()) {
 		// default weight -1, means no weight.
@@ -45,7 +45,7 @@ namespace Yuki {
 	}
 
 	void Criterion::sort(int dim) {
-		std::sort(tuples.begin(), tuples.end(), TupleSorter(dim));
+		std::sort(tuples.begin(), tuples.end(), TupleSorter(dim, param.mask()));
 		reset();
 	}
 

@@ -6,7 +6,7 @@ namespace Yuki {
 	DataSet read_data(
 		const char *feat_file_name,
 		const char *label_file_name,
-		const DTParam &param) {
+		const Param &param) {
 
 		LOG::log("Reading data...\n\t"
 				 "X from: %s\n\t"  "Y from: %s\n", 

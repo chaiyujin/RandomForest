@@ -78,16 +78,16 @@ namespace Yuki {
 
 		size_t size() const { return v.size(); }
 		template <class U>
-		friend bool less_than(const Feature<U> &f0, const Feature<U> &f1, int dim);
+		friend bool less_than(const Feature<U> &f0, const Feature<U> &f1, int dim, const Mask &mask);
 	private:
 		std::vector<T> v;
 	};
 
 	/* the sort is designed for the feature */
 	template <class T>
-	inline bool less_than(const Feature<T> &f0, const Feature<T> &f1, int dim) {
+	inline bool less_than(const Feature<T> &f0, const Feature<T> &f1, int dim, const Mask &mask) {
 #define CMP_FEATURE(i) \
-		{if (f0[i] < f1[i]) return true;\
+		if (mask[i]) {if (f0[i] < f1[i]) return true;\
 		else if (f0[i] > f1[i]) return false;}
 
 		CMP_FEATURE(dim);
@@ -126,12 +126,13 @@ namespace Yuki {
 
 	class TupleSorter {
 	public:
-		TupleSorter(int i) : dim(i) {}
+		TupleSorter(int i, const Mask &mask) : dim(i), mask(mask) {}
 		bool operator()(Tuple * const &t0, Tuple * const &t1) {
-			return less_than(t0->X, t1->X, dim);
+			return less_than(t0->X, t1->X, dim, mask);
 		}
 	private:
 		int dim;
+		const Mask &mask;
 	};
 
 	typedef std::vector<Tuple *> DataSet;
@@ -139,7 +140,7 @@ namespace Yuki {
 	DataSet read_data(
 		const char *feat_file_name,
 		const char *label_file_name,
-		const DTParam &param);
+		const Param &param);
 	
 }
 

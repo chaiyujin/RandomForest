@@ -15,5 +15,6 @@ void check_criterion();
 void check_random();
 void check_split();
 void check_tree_1();
+void check_tree_2();
 
 #endif

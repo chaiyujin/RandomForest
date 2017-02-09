@@ -1,7 +1,7 @@
 #include "splitter.h"
 
 namespace Yuki {
-	Splitter::Splitter(DataSet &data, const DTParam &param, double all_samples_weight)
+	Splitter::Splitter(DataSet &data, const Param &param, double all_samples_weight)
 		: tuples(data), param(param), best_pos_(-1), best_dim_(-1), 
 		  criterion(data, param, all_samples_weight) {
 	}

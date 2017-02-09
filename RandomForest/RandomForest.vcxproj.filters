@@ -31,6 +31,12 @@
     <Filter Include="Header Files\check">
       <UniqueIdentifier>{67f151c2-061a-45d8-ad51-84bdb71894ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\forest">
+      <UniqueIdentifier>{7a998ab3-9fb6-4ace-8319-f344cc8a5c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\forest">
+      <UniqueIdentifier>{b2c0f846-ea3a-49df-914f-aa36c27436c5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils\log.h">
@@ -63,6 +69,9 @@
     <ClInclude Include="tree\tree.h">
       <Filter>Header Files\tree</Filter>
     </ClInclude>
+    <ClInclude Include="forest\random_forest.h">
+      <Filter>Header Files\forest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\log.cpp">
@@ -91,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="tree\tree.cpp">
       <Filter>Source Files\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="forest\random_forest.cpp">
+      <Filter>Source Files\forest</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

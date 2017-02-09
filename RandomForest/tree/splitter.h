@@ -9,7 +9,7 @@ namespace Yuki {
 
 	class Splitter {
 	public:
-		Splitter(DataSet &data, const DTParam &param, double all_samples_weight = -1);
+		Splitter(DataSet &data, const Param &param, double all_samples_weight = -1);
 		virtual ~Splitter() {}
 
 		// to-do better for un-stable sorting
@@ -23,7 +23,7 @@ namespace Yuki {
 
 	private:
 		DataSet &tuples;
-		const DTParam &param;
+		const Param &param;
 		int best_pos_;
 		int best_dim_;
 		DFeature best_split_feature_;

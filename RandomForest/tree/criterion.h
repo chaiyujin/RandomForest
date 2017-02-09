@@ -13,7 +13,7 @@ namespace Yuki {
 	class Criterion {
 	public:
 
-		Criterion(DataSet &data, const DTParam &param, double all_samples_weight = -1);
+		Criterion(DataSet &data, const Param &param, double all_samples_weight = -1);
 
 		virtual ~Criterion() {}
 
@@ -33,7 +33,7 @@ namespace Yuki {
 		// tuples for current node
 		DataSet &tuples;
 		// global param, passed.
-		const DTParam &param;
+		const Param &param;
 		// total weight of all samples
 		double weighted_all_samples;
 		// split position, [0, pos - 1] in left and [pos, size - 1] in right

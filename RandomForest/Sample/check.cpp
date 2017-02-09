@@ -1,10 +1,11 @@
 #include "check.h"
+#include <time.h>
 
 using namespace std;
 using namespace Yuki;
 
 void check_criterion() {
-	DTParam param("Sample/config.cfg");
+	Param param("Sample/config.cfg");
 	cout << param.max_depth() << " "
 		<< param.max_leaves() << " "
 		<< param.min_leaf_samples() << endl;
@@ -110,7 +111,7 @@ void check_criterion() {
 }
 
 void check_split() {
-	DTParam param("Sample/config.cfg");
+	Param param("Sample/config.cfg");
 	cout << param.max_depth() << " "
 		<< param.max_leaves() << " "
 		<< param.min_leaf_samples() << endl;
@@ -163,7 +164,7 @@ void check_split() {
 }
 
 void check_tree_1() {
-	DTParam param("Sample/config.cfg");
+	Param param("Sample/config.cfg");
 	cout << param.max_depth() << " "
 		<< param.max_leaves() << " "
 		<< param.min_leaf_samples() << endl;
@@ -172,20 +173,17 @@ void check_tree_1() {
 	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
 	DataSet tuples_sub;
 
-	for (int i = 0; i < 600; ++i) {
+	for (int i = 0; i < tuples.size(); ++i) {
 		tuples_sub.emplace_back(tuples[i]);
-		for (int j = 0; j < i; ++j) {
-			if (tuples_sub[i]->X == tuples_sub[j]->X) {
-				cout << j << "error!\n";
-			}
-		}
+
 	}
 
 	DecisionTree tree("Sample/config.cfg");
+
+	cout << "Fit\n";
 	tree.fit(tuples_sub);
 
-	cout << "Fit over\n";
-
+	cout << "Checking..\n";
 	Range(i, tuples_sub.size()) {
 		DFeature query = tuples_sub[i]->X;
 		DLabel res = tree.predict(query);
@@ -210,7 +208,51 @@ void check_tree_1() {
 		}
 	}
 
-	
+	system("pause");
+}
+
+void check_tree_2() {
+	Param param("Sample/config.cfg");
+	cout << param.max_depth() << " "
+		<< param.max_leaves() << " "
+		<< param.min_leaf_samples() << endl;
+	cout << param.is_regression() << endl;
+
+	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+
+	DecisionTree tree("Sample/config.cfg");
+
+	{
+		const time_t t = time(NULL);
+		struct tm* current_gmtime = gmtime(&t);
+
+		printf("格林威治时间：%d-%d-%d %d:%d:%d\r\n",
+			current_gmtime->tm_year + 1900,
+			current_gmtime->tm_mon + 1,
+			current_gmtime->tm_mday,
+			current_gmtime->tm_hour,
+			current_gmtime->tm_min,
+			current_gmtime->tm_sec);
+	}
+	cout << "Fit\n";
+	tree.fit(tuples);
+	cout << "Finish\n";
+
+	{
+		const time_t t = time(NULL);
+		struct tm* current_gmtime = gmtime(&t);
+
+		printf("格林威治时间：%d-%d-%d %d:%d:%d\r\n",
+			current_gmtime->tm_year + 1900,
+			current_gmtime->tm_mon + 1,
+			current_gmtime->tm_mday,
+			current_gmtime->tm_hour,
+			current_gmtime->tm_min,
+			current_gmtime->tm_sec);
+	}
+
+
+
 
 	system("pause");
 }

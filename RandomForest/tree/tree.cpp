@@ -10,6 +10,10 @@ namespace Yuki {
 		: param(config_file), is_trained(false),
 		  root(nullptr) {}
 
+	DecisionTree::DecisionTree(const Param &param)
+		: param(param), is_trained(false),
+		  root(nullptr) {}
+
 	bool DecisionTree::fit(const DataSet &data_set) {
 		// copy the DataSet, it's fast due the pointer representation
 		new (&tuples) DataSet(data_set);
@@ -30,12 +34,67 @@ namespace Yuki {
 	// use the priority queue
 	bool DecisionTree::bfs_grow() {
 		priority_queue<GrowJob *, std::vector<GrowJob *>, GrowJobCMP> job_queue;
-		return grow(job_queue, param.max_leaves());
+		bool succ = true;
+		int leaves_count = 0;
+		int max_leaves = param.max_leaves();
+
+		// first make the root
+		root = nullptr;
+		{
+			GrowJob *job = new GrowJob(tuples, param, nullptr, 0, 0);
+			job_queue.push(job);
+		}
+		// work on the queue until max_leaves or empty queue
+		while (!job_queue.empty() &&
+			(!max_leaves || leaves_count < max_leaves)) {
+			// get and pop the top job
+			GrowJob *job_ptr = job_queue.top();
+			job_queue.pop();
+
+			std::vector<GrowJob *> children_jobs;
+			TreeNode *ret = job_ptr->work(children_jobs);
+			if (!ret) {
+				error_exit("Error occurs in grow job!");
+			}
+			if (!root) root = ret; // update root
+			Range(i, children_jobs.size()) {
+				job_queue.push(children_jobs[i]);
+			}
+			if (children_jobs.size() == 0) {
+				++leaves_count;
+			}
+
+			// delete the job
+			delete job_ptr;
+		}
+
+		return succ;
 	}
 
 	bool DecisionTree::dfs_grow() {
-		stack<GrowJob *> job_stack;
-		return grow(job_stack, 0);
+		bool succ = true;
+
+		
+
+		return succ;
+	}
+
+	void DecisionTree::dfs(GrowJob *job_ptr) {
+		std::vector<GrowJob *> children_jobs;
+		TreeNode *ret = job_ptr->work(children_jobs);
+		if (!ret) {
+			error_exit("Error occurs in grow job!");
+		}
+		if (!root) root = ret; // update root
+		// delete the job
+		delete job_ptr;
+
+		// openmp speed up
+#pragma omp parallel for
+		Range(i, children_jobs.size()) {
+			dfs(children_jobs[i]);
+		}
+		return;
 	}
 
 	DLabel DecisionTree::predict(const DFeature & feature) {
@@ -44,7 +103,7 @@ namespace Yuki {
 		while (cur != nullptr) {
 			if (cur->is_leaf()) {
 				new (&ret) DLabel(cur->label());
-				cur = cur->left_child();
+				cur = cur->child(LEFT_CHILD);
 			}
 			else {
 				cur = cur->which_child(feature);
@@ -65,7 +124,7 @@ namespace Yuki {
 		}
 		else {
 			// make a non-leaf
-			node = new TreeNode(false);
+			node = new TreeNode(false, param.mask());
 			// new a split
 			Splitter splitter(tuples, param);
 
@@ -90,14 +149,10 @@ namespace Yuki {
 
 		if (node) {
 			node->set_depth(depth);
-		}
-		
-		// update father
-		if (node && father) {
-			if (child_idx == 0)
-				father->set_left_child(node);
-			else if (child_idx == 1)
-				father->set_right_child(node);
+			// update father
+			if (father) {
+				father->set_child(child_idx, node);
+			}
 		}
 
 		return node;
@@ -105,7 +160,7 @@ namespace Yuki {
 
 	TreeNode *GrowJob::make_leaf() {
 		// make a leaf
-		TreeNode *node = new TreeNode(true);
+		TreeNode *node = new TreeNode(true, param.mask());
 
 		// average the label
 		DLabel label(tuples[0]->Y);
