@@ -7,9 +7,15 @@
 
 namespace Yuki {
 
+	// to-do classification
+
+	// only regression version
 	class RandomForest {
 	public:
 		RandomForest(const char *config);
+
+		bool fit(DataSet &data_set);
+		DLabel predict(const DFeature &query);
 
 	private:
 		

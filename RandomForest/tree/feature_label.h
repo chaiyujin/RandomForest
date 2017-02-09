@@ -47,6 +47,11 @@ namespace Yuki {
 			return v[index];
 		}
 		size_t size() const { return v.size(); }
+
+		void zeros(int size) {
+			v.resize(size);
+			memset(v.data(), 0, sizeof(T) * size);
+		}
 	private:
 		std::vector<T> v;
 	};
@@ -77,6 +82,11 @@ namespace Yuki {
 		}
 
 		size_t size() const { return v.size(); }
+		void zeros(int size) {
+			v.resize(size);
+			memset(v.data(), 0, sizeof(T) * size);
+		}
+
 		template <class U>
 		friend bool less_than(const Feature<U> &f0, const Feature<U> &f1, int dim, const Mask &mask);
 	private:
