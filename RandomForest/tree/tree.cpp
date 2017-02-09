@@ -1,6 +1,8 @@
 #include "tree.h"
 #include <queue>
+#include <stack>
 using std::priority_queue;
+using std::stack;
 
 namespace Yuki {
 
@@ -13,12 +15,12 @@ namespace Yuki {
 		new (&tuples) DataSet(data_set);
 
 		bool ret;
-		if (param.max_leaves() >= 0) {
+		if (param.max_leaves()) {
 			// with the max_leaves limitation, use best first method
 			ret = bfs_grow();
 		}
 		else {
-			//ret = dfs_grow();
+			ret = dfs_grow();
 		}
 
 		is_trained = ret;
@@ -27,55 +29,13 @@ namespace Yuki {
 
 	// use the priority queue
 	bool DecisionTree::bfs_grow() {
-		bool succ = true;
-		int leaves_count = 0;
-
 		priority_queue<GrowJob *, std::vector<GrowJob *>, GrowJobCMP> job_queue;
-
-		// first make the root
-		{
-			GrowJob job(tuples, param, nullptr, 0, 0);
-			std::vector<GrowJob *> children_jobs;
-			// make root
-			root = job.work(children_jobs);
-			// insert the children job into queue
-			if (children_jobs.size()) {
-				Range(i, children_jobs.size()) {
-					job_queue.push(children_jobs[i]);
-				}
-			}
-			else {
-				++leaves_count;
-				LOG::warning("Too few data tuples.\n");
-			}
-		}
-		// work on the queue until max_leaves or empty queue
-		while (!job_queue.empty() && leaves_count < param.max_leaves()) {
-			// get and pop the top job
-			GrowJob *job_ptr = job_queue.top();
-			job_queue.pop();
-
-			std::vector<GrowJob *> children_jobs;
-			TreeNode *ret = job_ptr->work(children_jobs);
-			if (!ret) {
-				error_exit("Error occurs in grow job!");
-			}
-			Range(i, children_jobs.size()) {
-				job_queue.push(children_jobs[i]);
-			}
-
-			// delete the job
-			delete job_ptr;
-		}
-
-		return succ;
+		return grow(job_queue, param.max_leaves());
 	}
 
-	// to-do implement dfs grow method
 	bool DecisionTree::dfs_grow() {
-		bool succ = true;
-
-		return succ;
+		stack<GrowJob *> job_stack;
+		return grow(job_stack, 0);
 	}
 
 	DLabel DecisionTree::predict(const DFeature & feature) {

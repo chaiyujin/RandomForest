@@ -127,11 +127,9 @@ namespace Yuki {
 	class TupleSorter {
 	public:
 		TupleSorter(int i) : dim(i) {}
-
 		bool operator()(Tuple * const &t0, Tuple * const &t1) {
 			return less_than(t0->X, t1->X, dim);
 		}
-
 	private:
 		int dim;
 	};

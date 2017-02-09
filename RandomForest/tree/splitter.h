@@ -24,8 +24,8 @@ namespace Yuki {
 	private:
 		DataSet &tuples;
 		const DTParam &param;
-		int best_dim_;
 		int best_pos_;
+		int best_dim_;
 		DFeature best_split_feature_;
 
 		Criterion criterion;
