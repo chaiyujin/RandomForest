@@ -13,12 +13,14 @@ namespace Yuki {
 	class RandomForest {
 	public:
 		RandomForest(const char *config);
+		RandomForest(const Param &param);
 
 		bool fit(DataSet &data_set);
 		DLabel predict(const DFeature &query);
 
 	private:
-		
+		void init();
+
 		Param param;
 		std::vector<DecisionTree> trees;
 

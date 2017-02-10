@@ -68,13 +68,16 @@ namespace Yuki {
 			delete job_ptr;
 		}
 
+		LOG::log("Tree with %d leaves.\n", leaves_count);
+
 		return succ;
 	}
 
 	bool DecisionTree::dfs_grow() {
 		bool succ = true;
 
-		
+		GrowJob *job = new GrowJob(tuples, param, nullptr, 0, 0);
+		dfs(job);
 
 		return succ;
 	}
@@ -85,13 +88,12 @@ namespace Yuki {
 		if (!ret) {
 			error_exit("Error occurs in grow job!");
 		}
+
 		if (!root) root = ret; // update root
 		// delete the job
 		delete job_ptr;
 
-		// openmp speed up
-#pragma omp parallel for
-		Range(i, children_jobs.size()) {
+		Range(i, (int)children_jobs.size()) {
 			dfs(children_jobs[i]);
 		}
 		return;
@@ -99,6 +101,12 @@ namespace Yuki {
 
 	DLabel DecisionTree::predict(const DFeature & feature) {
 		DLabel ret;
+
+		if (!root) {
+			LOG::error("Not trained yet!\n");
+			return ret;
+		}
+
 		TreeNode *cur = root;
 		while (cur != nullptr) {
 			if (cur->is_leaf()) {

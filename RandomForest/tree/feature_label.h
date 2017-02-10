@@ -33,6 +33,7 @@ namespace Yuki {
 			return *this;
 		}
 		bool operator==(const Label &l) {
+			if (v.size() != l.v.size()) return false;
 			for (size_t i = 0; i < v.size(); ++i) {
 				if (!equal(v[i], l.v[i])) return false;
 			}

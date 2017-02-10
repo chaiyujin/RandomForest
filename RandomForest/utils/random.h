@@ -31,13 +31,13 @@ namespace Yuki {
             dist(0, 1) {}
         ~Random() {}
 
-        float random() {
+        double random() {
             return dist(engine);
         }
 
         template <class T>
         T random(T scale) {
-            return random() * scale;
+            return (T)(random() * scale);
         }
     };
 }

@@ -14,6 +14,7 @@ namespace Yuki {
 		
 		Param(const char *cfg_file)
 			: trees_(1), tree_feature_size_(0),
+			  bootstrap_(0),
 			  type_(REGRESSION), // default as regression
 			  max_depth_(0), max_leaves_(0), // 0 as not define
 			  min_leaf_samples_(1), // at least 1 sample on a leaf
@@ -32,6 +33,7 @@ namespace Yuki {
 			config.get("SPLIT_LIMIT", split_limit_);
 			config.get("TREES", trees_);
 			config.get("TREE_FEATURE_SIZE", tree_feature_size_);
+			config.get("BOOTSTRAP", bootstrap_);
 
 
 			// must config
@@ -52,7 +54,7 @@ namespace Yuki {
 
 		int trees()				const { return trees_; }
 		int tree_feature_size() const { return tree_feature_size_; }
-
+		bool use_bootstrap()	const { return bootstrap_ > 0; }
 		int max_depth()			const { return max_depth_; }
 		int max_leaves()		const { return max_leaves_; }
 		int min_leaf_samples()	const { return min_leaf_samples_; }
@@ -72,6 +74,7 @@ namespace Yuki {
 		/* for forest */
 		int trees_;
 		int tree_feature_size_;
+		int bootstrap_;
 
 		/* for tree */
 		int type_;

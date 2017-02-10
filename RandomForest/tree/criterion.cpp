@@ -7,7 +7,7 @@ namespace Yuki {
 		: tuples(data), param(param), weighted_all_samples(all_samples_weight),
 		  sum_total(param.label_size()), sum_left(param.label_size()), sum_right(param.label_size()) {
 		// default weight -1, means no weight.
-		if (weighted_all_samples < 0) weighted_all_samples = tuples.size();
+		if (weighted_all_samples < 0) weighted_all_samples = (double)tuples.size();
 
 		init();
 	}

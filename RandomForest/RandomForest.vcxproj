@@ -47,7 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>LLVM-vs2014</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -153,6 +153,7 @@
     <ClCompile Include="tree\tree.cpp" />
     <ClCompile Include="utils\config.cpp" />
     <ClCompile Include="utils\log.cpp" />
+    <ClCompile Include="utils\timer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="forest\random_forest.h" />
@@ -165,6 +166,7 @@
     <ClInclude Include="utils\config.h" />
     <ClInclude Include="utils\log.h" />
     <ClInclude Include="utils\random.h" />
+    <ClInclude Include="utils\timer.h" />
     <ClInclude Include="utils\yuki.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

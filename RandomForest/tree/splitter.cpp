@@ -18,8 +18,8 @@ namespace Yuki {
 			criterion.sort(dim);
 		
 			// find the best split
-			for (int pos = 1;
-				 pos + 1 <= tuples.size(); ++pos) {
+			for (int pos = param.min_leaf_samples();
+				 pos + param.min_leaf_samples() <= tuples.size(); ++pos) {
 
 				criterion.update(pos);
 				double proxy = criterion.proxy_impurity_improvement();

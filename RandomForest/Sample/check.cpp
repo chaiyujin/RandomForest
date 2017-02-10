@@ -189,22 +189,6 @@ void check_tree_1() {
 		DLabel res = tree.predict(query);
 		if (!(res == tuples_sub[i]->Y)) {
 			cout << i << " not equal\n";
-			Range(k, tuples_sub.size()) {
-				if (res == tuples_sub[k]->Y) {
-					cout << "\tequal to " << k << endl;
-
-					Range(j, query.size()) {
-						cout << query[j] << "\t";
-					}
-					cout << endl;
-					Range(j, query.size()) {
-						cout << tuples_sub[k]->X[j] << "\t";
-					}
-					cout << endl;
-
-					break;
-				}
-			}
 		}
 	}
 
@@ -222,37 +206,44 @@ void check_tree_2() {
 
 	DecisionTree tree("Sample/config.cfg");
 
-	{
-		const time_t t = time(NULL);
-		struct tm* current_gmtime = gmtime(&t);
-
-		printf("格林威治时间：%d-%d-%d %d:%d:%d\r\n",
-			current_gmtime->tm_year + 1900,
-			current_gmtime->tm_mon + 1,
-			current_gmtime->tm_mday,
-			current_gmtime->tm_hour,
-			current_gmtime->tm_min,
-			current_gmtime->tm_sec);
-	}
 	cout << "Fit\n";
 	tree.fit(tuples);
 	cout << "Finish\n";
 
-	{
-		const time_t t = time(NULL);
-		struct tm* current_gmtime = gmtime(&t);
 
-		printf("格林威治时间：%d-%d-%d %d:%d:%d\r\n",
-			current_gmtime->tm_year + 1900,
-			current_gmtime->tm_mon + 1,
-			current_gmtime->tm_mday,
-			current_gmtime->tm_hour,
-			current_gmtime->tm_min,
-			current_gmtime->tm_sec);
+	system("pause");
+}
+
+void check_foreset_1() {
+	Param param("Sample/config.cfg");
+	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+
+	RandomForest foreset(param);
+	{
+		StopWatch watch("Fit");
+		foreset.fit(tuples);
 	}
 
+	{
+		StopWatch watch("Predict", TimeType::MS);
+		DFeature query = tuples[0]->X;
+		DLabel res = foreset.predict(query);
+	}
 
-
+	/*cout << "Checking..\n";
+	Range(i, tuples.size()) {
+		DFeature query = tuples[i]->X;
+		DLabel res = foreset.predict(query);
+		if (!(res == tuples[i]->Y)) {
+			cout << i << " not equal\n";
+			Range(k, tuples.size()) {
+				if (res == tuples[k]->Y) {
+					cout << "\tequal to " << k << endl;
+					break;
+				}
+			}
+		}
+	}*/
 
 	system("pause");
 }
