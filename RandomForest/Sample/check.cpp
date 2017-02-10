@@ -126,8 +126,7 @@ void check_split() {
 	}
 
 	Splitter splitter(tuples_sub, param);
-	std::pair<double, double> ch_imp;
-	cout << splitter.split_best(set_a, set_b, ch_imp) << endl;
+	cout << splitter.split_best(set_a, set_b) << endl;
 
 	int dim = splitter.best_dim();
 	int pos = splitter.best_pos();
@@ -183,6 +182,8 @@ void check_tree_1() {
 	cout << "Fit\n";
 	tree.fit(tuples_sub);
 
+	system("pause");
+
 	cout << "Checking..\n";
 	Range(i, tuples_sub.size()) {
 		DFeature query = tuples_sub[i]->X;
@@ -230,7 +231,7 @@ void check_foreset_1() {
 		DLabel res = foreset.predict(query);
 	}
 
-	/*cout << "Checking..\n";
+	cout << "Checking..\n";
 	Range(i, tuples.size()) {
 		DFeature query = tuples[i]->X;
 		DLabel res = foreset.predict(query);
@@ -243,7 +244,7 @@ void check_foreset_1() {
 				}
 			}
 		}
-	}*/
+	}
 
 	system("pause");
 }

@@ -6,7 +6,7 @@ namespace Yuki {
 		  criterion(data, param, all_samples_weight) {
 	}
 
-	bool Splitter::split_best(DataSet &set_a, DataSet &set_b, std::pair<double, double> &child_impurity) {
+	bool Splitter::split_best(DataSet &set_a, DataSet &set_b) {
 		bool found = false;
 		double best_proxy = -DBL_MAX;
 
@@ -44,8 +44,8 @@ namespace Yuki {
 			new (&set_a) DataSet(tuples.begin(), tuples.begin() + best_pos_);
 			new (&set_b) DataSet(tuples.begin() + best_pos_, tuples.end());
 
-			// update the child impurity
-			child_impurity = criterion.children_impurity();
+			// update the impurity improvement
+			best_improvement_ = criterion.impurity_improvement();
 		}
 
 		return found;

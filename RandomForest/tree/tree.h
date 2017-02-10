@@ -66,10 +66,13 @@ namespace Yuki {
 			: priority(priority),
 			  tuples(data_set), param(param),
 			  father(father), child_idx(child_idx),
-			  depth(depth) {}
+			  depth(depth), 
+			  pre_calced(false), pre_calc_succ(false) {}
 
 		// return the node made, and the jobs for children if any exists.
 		TreeNode *work(std::vector<GrowJob *> &children_jobs);
+		// directly make leaf
+		TreeNode *abandon();
 
 		double priority; // small first
 
@@ -82,6 +85,16 @@ namespace Yuki {
 		TreeNode *father;
 		int child_idx;
 		int depth;
+
+		/* for pre calculate */
+		bool pre_calced;
+		DataSet set_left, set_right;
+		bool pre_calc_succ;
+		DFeature pre_calc_best_feature;
+		int pre_calc_best_dim;
+		double pre_best_improvement;
+
+		void pre_calc();
 	};
 
 	struct GrowJobCMP {
@@ -90,7 +103,6 @@ namespace Yuki {
 			return j1->priority < j0->priority;
 		}
 	};
-
 
 	class DecisionTree {
 	public:
@@ -118,11 +130,11 @@ namespace Yuki {
 		bool is_trained;
 
 		TreeNode *root;
+
+		/* for debug */
+		int debug_count_leaves(TreeNode *root);
 	};
 
-	class DecisionTreeRegression : public DecisionTree {
-
-	};
 }
 
 #endif  // !__TREE_TREE_H__
