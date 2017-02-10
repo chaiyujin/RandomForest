@@ -172,6 +172,14 @@ void check_tree_1() {
 	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
 	DataSet tuples_sub;
 
+	FILE *fp = fopen("Sample/test.param", "wb");
+	param.save(fp);
+	fclose(fp);
+
+	fp = fopen("Sample/test.param", "rb");
+	param = Param::load(fp);
+	fclose(fp);
+
 	for (int i = 0; i < tuples.size(); ++i) {
 		tuples_sub.emplace_back(tuples[i]);
 
@@ -231,7 +239,7 @@ void check_foreset_1() {
 		DLabel res = foreset.predict(query);
 	}
 
-	cout << "Checking..\n";
+	/*cout << "Checking..\n";
 	Range(i, tuples.size()) {
 		DFeature query = tuples[i]->X;
 		DLabel res = foreset.predict(query);
@@ -244,7 +252,7 @@ void check_foreset_1() {
 				}
 			}
 		}
-	}
+	}*/
 
 	system("pause");
 }
@@ -266,6 +274,12 @@ void check_random() {
 		sum += count[i];
 	}
 	Yuki::LOG::log("Total %d\n", sum);
+
+	system("pause");
+}
+
+void check_load() {
+	
 
 	system("pause");
 }

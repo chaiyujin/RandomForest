@@ -238,5 +238,33 @@ namespace Yuki {
 
 		return node;
 	}
+
+	// save the param, and the tree
+	void DecisionTree::save(FILE *fp) {
+		/* save param */
+		param.save(fp);
+		/* save tree */
+		TreeNode *node = root;
+		
+		// save node's father id; if father == self, it's root.
+		
+		// save node info
+		// 1 byte: is_leaf
+
+		// 1 int: depth
+		
+		// if non_leaf
+		//    save feature and dim
+
+		//    else save label
+
+
+	}
+
+	// load a decision tree
+	DecisionTree DecisionTree::load(FILE *fp) {
+		DecisionTree tree;
+		return tree;
+	}
 }
 

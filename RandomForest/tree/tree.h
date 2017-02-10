@@ -10,11 +10,12 @@ namespace Yuki {
 #define LEFT_CHILD  0
 #define RIGHT_CHILD 1
 #define CHILDREN_NUM 2
+	class DecisionTree;
 
 	class TreeNode {
 	public:
 		TreeNode(bool leaf, const Mask &m)
-			: is_leaf_(leaf),
+			: id_(-1), is_leaf_(leaf),
 			  children(CHILDREN_NUM),
 			  mask_(m) {
 			Range(i, children.size()) children[i] = nullptr;
@@ -41,8 +42,9 @@ namespace Yuki {
 		bool is_leaf() const { return is_leaf_; }
 		TreeNode *child(int i) { return children[i]; }
 		const DLabel &label() const { return label_; }
-
+		int id() const { return id_; }
 	private:
+		int id_;
 		int depth_;
 		bool is_leaf_;
 		// non-leaf has left and right children
@@ -108,14 +110,25 @@ namespace Yuki {
 	public:
 		DecisionTree(const char *config_file);
 		DecisionTree(const Param &);
+		DecisionTree(const DecisionTree &dt) {
+			LOG::log("copy dt()\n");
+		}
 		virtual ~DecisionTree() {}
 
 		// simple fit with data
 		bool fit(const DataSet &data_set);
 		// predict with feature
 		DLabel predict(const DFeature & feature);
+
+		// save the param, and the tree
+		void save(FILE *fp);
+		// load a decision tree
+		static DecisionTree load(FILE *fp);
 		
 	protected:
+		// only available for load
+		DecisionTree() {}
+
 		// grow the decision tree with mode
 		bool dfs_grow();
 		bool bfs_grow();

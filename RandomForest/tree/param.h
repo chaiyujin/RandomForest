@@ -3,6 +3,7 @@
 #define __TREE_PARAM_H__
 
 #include "../utils/config.h"
+#include "../utils/yuki.h"
 namespace Yuki {
 
 #define CLASSIFICATION 0
@@ -12,7 +13,7 @@ namespace Yuki {
 	class Param {
 	public:
 		
-		Param(const char *cfg_file)
+		Param(const char *cfg_file = nullptr)
 			: trees_(1), tree_feature_size_(0),
 			  bootstrap_(0),
 			  type_(REGRESSION), // default as regression
@@ -22,31 +23,31 @@ namespace Yuki {
 			  feature_size_(-1), label_size_(-1), // must define
 			  iterations_(1) // default 1 iteration 
 		{
-			Config config(cfg_file);
-			config.get("TYPE", type_);
-			config.get("MAX_DEPTH", max_depth_);
-			config.get("MAX_LEAVES", max_leaves_);
-			config.get("MIN_LEAF_SAMPLES", min_leaf_samples_);
-			config.get("FEATURE_SIZE", feature_size_);
-			config.get("LABEL_SIZE", label_size_);
-			config.get("ITERATIONS", iterations_);
-			config.get("SPLIT_LIMIT", split_limit_);
-			config.get("TREES", trees_);
-			config.get("TREE_FEATURE_SIZE", tree_feature_size_);
-			config.get("BOOTSTRAP", bootstrap_);
+			if (cfg_file) {
+				Config config(cfg_file);
+				config.get("TYPE", type_);
+				config.get("MAX_DEPTH", max_depth_);
+				config.get("MAX_LEAVES", max_leaves_);
+				config.get("MIN_LEAF_SAMPLES", min_leaf_samples_);
+				config.get("FEATURE_SIZE", feature_size_);
+				config.get("LABEL_SIZE", label_size_);
+				config.get("ITERATIONS", iterations_);
+				config.get("SPLIT_LIMIT", split_limit_);
+				config.get("TREES", trees_);
+				config.get("TREE_FEATURE_SIZE", tree_feature_size_);
+				config.get("BOOTSTRAP", bootstrap_);
 
+				// must config
+				CHECK(feature_size_ != -1);
+				CHECK(label_size_ != -1);
 
-			// must config
-			CHECK(feature_size_ != -1);
-			CHECK(label_size_ != -1);
+				// update tree feature size for forest
+				if (tree_feature_size_ == 0) tree_feature_size_ = feature_size_;
 
-			// update tree feature size for forest
-			if (tree_feature_size_ == 0) tree_feature_size_ = feature_size_;
-			
-			// default mask as true, all features work
-			mask_.resize(feature_size_);
-			for (int i = 0; i < mask_.size(); ++i) mask_[i] = true;
-
+				// default mask as true, all features work
+				mask_.resize(feature_size_);
+				for (int i = 0; i < mask_.size(); ++i) mask_[i] = true;
+			}
 		}
 
 		int type()				const { return type_; }
@@ -69,6 +70,9 @@ namespace Yuki {
 		void set_mask(const Mask &m) {
 			new (&mask_) Mask(m);
 		}
+
+		void save(FILE *fp); 
+		static Param load(FILE *fp);
 
 	private:
 		/* for forest */
