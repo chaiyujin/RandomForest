@@ -12,6 +12,7 @@ namespace Yuki {
 	// only regression version
 	class RandomForest {
 	public:
+		RandomForest() {}
 		RandomForest(const char *config);
 		RandomForest(const Param &param);
 
@@ -19,10 +20,9 @@ namespace Yuki {
 		DLabel predict(const DFeature &query);
 
 		void save(const char *file_name);
-		static RandomForest load(const char *file_name);
+		static void load(RandomForest *rf, const char *file_name);
 
 	protected:
-		RandomForest() {}
 
 	private:
 		void init();

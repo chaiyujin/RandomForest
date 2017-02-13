@@ -36,10 +36,9 @@ namespace Yuki {
 #undef FWriteInt
 	}
 
-	Param Param::load(FILE *fp) {
-		Param param;
+	void Param::load(Param *param, FILE *fp) {
 #define FReadInt(x) \
-		fread(&param.x, sizeof(int), 1, fp);
+		fread(&param->x, sizeof(int), 1, fp);
 
 		/* for data */
 		FReadInt(feature_size_);
@@ -63,15 +62,15 @@ namespace Yuki {
 		// mask
 		int mask_size;
 		fread(&mask_size, sizeof(int), 1, fp);
-		param.mask_.resize(mask_size);
+		param->mask_.resize(mask_size);
 
 		Range(i, mask_size) {
 			int x;
 			fread(&x, sizeof(int), 1, fp);
-			param.mask_[i] = (x > 0);
+			param->mask_[i] = (x > 0);
 		}
 		
 #undef FReadInt
-		return param;
+		return;
 	}
 }

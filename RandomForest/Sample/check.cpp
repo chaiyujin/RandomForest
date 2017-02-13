@@ -177,7 +177,7 @@ void check_tree_1() {
 	fclose(fp);
 
 	fp = fopen("Sample/test.param", "rb");
-	param = Param::load(fp);
+	Param::load(&param, fp);
 	fclose(fp);
 
 	for (int i = 0; i < tuples.size(); ++i) {
@@ -310,7 +310,8 @@ void check_load() {
 		std::vector<DecisionTree> trees;
 		cout << "Loading...\n";
 		FILE *fp = fopen("Sample/tree.dt", "rb");
-		trees.emplace_back(std::move(DecisionTree::load(fp)));
+		trees.emplace_back(DecisionTree());
+		DecisionTree::load(&trees.back(), fp);
 		fclose(fp);
 		
 		fp = fopen("Sample/comp.dt", "wb");
@@ -361,7 +362,8 @@ void check_load_forest() {
 	}
 
 	{
-		RandomForest forest = RandomForest::load("Sample/forest.rf");
+		RandomForest forest;
+		RandomForest::load(&forest, "Sample/forest.rf");
 
 		cout << "Checking..\n";
 		Range(i, tuples.size()) {

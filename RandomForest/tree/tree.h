@@ -121,6 +121,8 @@ namespace Yuki {
 
 	class DecisionTree {
 	public:
+		// only available for load
+		DecisionTree() {}
 		DecisionTree(const char *config_file);
 		DecisionTree(const Param &);
 		virtual ~DecisionTree() {}
@@ -133,7 +135,7 @@ namespace Yuki {
 		// save the param, and the tree
 		void save(FILE *fp, bool with_param = true);
 		// load a decision tree
-		static DecisionTree load(FILE *fp, bool with_param = true);
+		static void load(DecisionTree *tree, FILE *fp, bool with_param = true);
 		
 
 		int debug_count_leaves() {
@@ -141,8 +143,6 @@ namespace Yuki {
 		}
 
 	protected:
-		// only available for load
-		DecisionTree() {}
 
 		// grow the decision tree with mode
 		bool dfs_grow();

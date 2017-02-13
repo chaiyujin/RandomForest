@@ -72,7 +72,7 @@ namespace Yuki {
 		}
 
 		void save(FILE *fp); 
-		static Param load(FILE *fp);
+		static void load(Param *param, FILE *fp);
 
 	private:
 		/* for forest */

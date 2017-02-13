@@ -106,19 +106,19 @@ namespace Yuki {
 		fclose(fp);
 	}
 	
-	RandomForest RandomForest::load(const char *file_name) {
-		RandomForest forest;
+	void RandomForest::load(RandomForest *forest, const char *file_name) {
 		// open
 		FILE *fp;
 		fopen_s(&fp, file_name, "rb");
 		// load param
-		forest.param = Param::load(fp);
+		Param::load(&forest->param, fp);
 
 		// load trees
-		Range(i, forest.param.trees()) {
-			forest.trees.emplace_back(std::move(DecisionTree::load(fp)));
+		Range(i, forest->param.trees()) {
+			forest->trees.emplace_back(DecisionTree());
+			DecisionTree::load(&forest->trees.back(), fp);
 		}
 		fclose(fp);
-		return forest;
+		return;
 	}
 }
