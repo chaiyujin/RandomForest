@@ -161,6 +161,9 @@ namespace Yuki {
 		const char *feat_file_name,
 		const char *label_file_name,
 		const Param &param);
+	DataSet read_data(
+		const char *feat_file_name,
+		const Param &param);
 	
 }
 

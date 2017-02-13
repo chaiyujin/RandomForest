@@ -23,6 +23,7 @@ namespace Yuki {
 		}
 
 		TreeNode *which_child(const DFeature &query_feature) {
+			LOG::error("Size %u %u\n", query_feature.size(), mask_.size());
 			if (less_than(query_feature, split_feature_, split_dim_, mask_))
 				return children[LEFT_CHILD];
 			else 

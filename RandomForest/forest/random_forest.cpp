@@ -114,9 +114,10 @@ namespace Yuki {
 		Param::load(&forest->param, fp);
 
 		// load trees
+		forest->trees.clear();
 		Range(i, forest->param.trees()) {
-			forest->trees.emplace_back(DecisionTree());
-			DecisionTree::load(&forest->trees.back(), fp);
+			forest->trees.push_back(DecisionTree());
+			DecisionTree::load(&forest->trees[i], fp);
 		}
 		fclose(fp);
 		return;
