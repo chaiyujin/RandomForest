@@ -22,5 +22,6 @@ void check_tree_2();
 void check_foreset_1();
 
 void check_load();
+void check_load_forest();
 
 #endif

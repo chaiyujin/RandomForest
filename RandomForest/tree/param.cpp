@@ -5,8 +5,6 @@ namespace Yuki {
 	void Param::save(FILE *fp) {
 #define FWriteInt(x) \
 		fwrite(&x, sizeof(int), 1, fp)
-#define FWriteBool(x) \
-		fwrite(&x, sizeof(bool), 1, fp)
 
 		/* for data */
 		FWriteInt(feature_size_);
@@ -29,22 +27,19 @@ namespace Yuki {
 
 		// mask
 		int mask_size = (int)mask_.size();
-		Mask mask_;
 		FWriteInt(mask_size);
 		Range(i, mask_.size()) {
-			FWriteBool(mask_[i]);
+			int x = mask_[i];
+			FWriteInt(x);
 		}
 
 #undef FWriteInt
-#undef FWriteBool
 	}
 
 	Param Param::load(FILE *fp) {
 		Param param;
 #define FReadInt(x) \
 		fread(&param.x, sizeof(int), 1, fp);
-#define FReadBool(x) \
-		fread(&param.x, sizeof(bool), 1, fp);
 
 		/* for data */
 		FReadInt(feature_size_);
@@ -71,11 +66,12 @@ namespace Yuki {
 		param.mask_.resize(mask_size);
 
 		Range(i, mask_size) {
-			FReadBool(mask_[i]);
+			int x;
+			fread(&x, sizeof(int), 1, fp);
+			param.mask_[i] = (x > 0);
 		}
-
+		
 #undef FReadInt
-#undef FReadBool
 		return param;
 	}
 }

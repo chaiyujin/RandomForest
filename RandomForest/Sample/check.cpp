@@ -279,6 +279,106 @@ void check_random() {
 }
 
 void check_load() {
+	Param param("Sample/config.cfg");
+	cout << param.max_depth() << " "
+		<< param.max_leaves() << " "
+		<< param.min_leaf_samples() << endl;
+	cout << param.is_regression() << endl;
+
+	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+	DataSet tuples_sub;
+
+	{
+		for (int i = 0; i < tuples.size(); ++i) {
+			tuples_sub.emplace_back(tuples[i]);
+
+		}
+
+		DecisionTree tree("Sample/config.cfg");
+
+		cout << "Fit\n";
+		tree.fit(tuples_sub);
+
+		FILE *fp = fopen("Sample/tree.dt", "wb");
+		tree.save(fp);
+		fclose(fp);
+
+		system("pause");
+	}
+
+	{
+		std::vector<DecisionTree> trees;
+		cout << "Loading...\n";
+		FILE *fp = fopen("Sample/tree.dt", "rb");
+		trees.emplace_back(std::move(DecisionTree::load(fp)));
+		fclose(fp);
+		
+		fp = fopen("Sample/comp.dt", "wb");
+		trees[0].save(fp);
+		fclose(fp);
+
+		cout << "Leaves: " << trees[0].debug_count_leaves() << endl;
+		cout << "Checking..\n";
+		Range(i, tuples_sub.size()) {
+			DFeature query = tuples_sub[i]->X;
+			DLabel res = trees[0].predict(query);
+			if (!(res == tuples_sub[i]->Y)) {
+				cout << i << " not equal\n";
+				Range(k, res.size()) {
+					cout << res[k] << " " << tuples_sub[i]->Y[k] << endl;
+				}
+				cout << endl;
+			}
+		}
+	}
+
+	system("pause");
+}
+
+void check_load_forest() {
+	Param param("Sample/config.cfg");
+	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+
+	//DataSet tuples;
+	//Range(i, 50) {
+	//	tuples.emplace_back(tuples_all[i]);
+	//}
+
+	{
+		RandomForest forest(param);
+		{
+			StopWatch watch("Fit");
+			forest.fit(tuples);
+		}
+
+		{
+			StopWatch watch("Predict", TimeType::MS);
+			DFeature query = tuples[0]->X;
+			DLabel res = forest.predict(query);
+		}
+
+		forest.save("Sample/forest.rf");
+	}
+
+	{
+		RandomForest forest = RandomForest::load("Sample/forest.rf");
+
+		cout << "Checking..\n";
+		Range(i, tuples.size()) {
+			DFeature query = tuples[i]->X;
+			DLabel res = forest.predict(query);
+			if (!(res == tuples[i]->Y)) {
+				cout << i << " not equal\n";
+				Range(k, tuples.size()) {
+					if (res == tuples[k]->Y) {
+						cout << "\tequal to " << k << endl;
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	
 
 	system("pause");

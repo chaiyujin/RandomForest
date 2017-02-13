@@ -15,7 +15,8 @@ namespace Yuki {
 	class TreeNode {
 	public:
 		TreeNode(bool leaf, const Mask &m)
-			: id_(-1), is_leaf_(leaf),
+			: is_leaf_(leaf),
+			  father_(nullptr),
 			  children(CHILDREN_NUM),
 			  mask_(m) {
 			Range(i, children.size()) children[i] = nullptr;
@@ -30,8 +31,10 @@ namespace Yuki {
 
 		/* set method */
 
+		void set_leaf(bool leaf) { is_leaf_ = leaf; }
 		void set_depth(int d) { depth_ = d; }
 		void set_child(int i, TreeNode *p) { children[i] = p; }
+		void set_father(TreeNode *p) { father_ = p; }
 		void set_split_feature(const DFeature &f) { new (&split_feature_) DFeature(f); }
 		void set_split_dim(int dim) { split_dim_ = dim; }
 		void set_label(const DLabel &l) { new (&label_) DLabel(l); }
@@ -39,14 +42,24 @@ namespace Yuki {
 		/* get method */
 
 		int depth() const { return depth_; }
-		bool is_leaf() const { return is_leaf_; }
+		bool is_leaf() const { return is_leaf_ > 0; }
 		TreeNode *child(int i) { return children[i]; }
+		const TreeNode *child(int i) const { return children[i]; }
+		TreeNode *father() { return father_; }
+		const TreeNode *father() const { return father_; }
 		const DLabel &label() const { return label_; }
-		int id() const { return id_; }
+
+	protected:
+		friend class DecisionTree;
+		/* save */
+		void save(FILE *fp) const;
+		static TreeNode *load(FILE *fp, const Param &param);
+
 	private:
-		int id_;
 		int depth_;
-		bool is_leaf_;
+		int is_leaf_;
+		// father pointer
+		TreeNode *father_;
 		// non-leaf has left and right children
 		std::vector<TreeNode *> children;
 		// for non-leaf to determine which child
@@ -110,9 +123,6 @@ namespace Yuki {
 	public:
 		DecisionTree(const char *config_file);
 		DecisionTree(const Param &);
-		DecisionTree(const DecisionTree &dt) {
-			LOG::log("copy dt()\n");
-		}
 		virtual ~DecisionTree() {}
 
 		// simple fit with data
@@ -121,10 +131,15 @@ namespace Yuki {
 		DLabel predict(const DFeature & feature);
 
 		// save the param, and the tree
-		void save(FILE *fp);
+		void save(FILE *fp, bool with_param = true);
 		// load a decision tree
-		static DecisionTree load(FILE *fp);
+		static DecisionTree load(FILE *fp, bool with_param = true);
 		
+
+		int debug_count_leaves() {
+			return debug_count_leaves(root);
+		}
+
 	protected:
 		// only available for load
 		DecisionTree() {}

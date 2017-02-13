@@ -18,6 +18,12 @@ namespace Yuki {
 		bool fit(DataSet &data_set);
 		DLabel predict(const DFeature &query);
 
+		void save(const char *file_name);
+		static RandomForest load(const char *file_name);
+
+	protected:
+		RandomForest() {}
+
 	private:
 		void init();
 

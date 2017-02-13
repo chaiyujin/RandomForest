@@ -187,6 +187,7 @@ namespace Yuki {
 			node->set_depth(depth);
 			// update father
 			if (father) {
+				node->set_father(father);
 				father->set_child(child_idx, node);
 			}
 		}
@@ -215,6 +216,7 @@ namespace Yuki {
 			node->set_depth(depth);
 			// update father
 			if (father) {
+				node->set_father(father);
 				father->set_child(child_idx, node);
 			}
 		}
@@ -239,31 +241,76 @@ namespace Yuki {
 		return node;
 	}
 
-	// save the param, and the tree
-	void DecisionTree::save(FILE *fp) {
-		/* save param */
-		param.save(fp);
-		/* save tree */
-		TreeNode *node = root;
-		
-		// save node's father id; if father == self, it's root.
-		
+	void TreeNode::save(FILE *fp) const {
 		// save node info
-		// 1 byte: is_leaf
-
+		// 1 int: is_leaf
+		int x = is_leaf_;
+		fwrite(&x, sizeof(int), 1, fp);
 		// 1 int: depth
+		fwrite(&depth_, sizeof(int), 1, fp);
 		
-		// if non_leaf
-		//    save feature and dim
+		if (!is_leaf_) {
+			// save feature and dim
+			fwrite(&split_dim_, sizeof(int), 1, fp);
+			fwrite(split_feature_.data(), sizeof(int), split_feature_.size(), fp);
 
-		//    else save label
+			// save children
+			Range(i, CHILDREN_NUM) {
+				if (child(i)) child(i)->save(fp);
+			}
+		}
+		else {
+			// save label
+			fwrite(label_.data(), sizeof(float), label_.size(), fp);
+		}
+	}
 
+	TreeNode *TreeNode::load(FILE *fp, const Param &param) {
+		TreeNode *node = new TreeNode(false, param.mask());
 
+		// load is_leaf
+		int x;
+		fread(&x, sizeof(int), 1, fp);
+		node->is_leaf_ = x > 0;
+		// 1 int: depth
+		fread(&node->depth_, sizeof(int), 1, fp);
+
+		if (!node->is_leaf_) {
+			// load feature and dim
+			fread(&node->split_dim_, sizeof(int), 1, fp);
+			node->split_feature_.resize(param.feature_size());
+			fread(node->split_feature_.data(), sizeof(int), node->split_feature_.size(), fp);
+
+			// load children
+			Range(i, CHILDREN_NUM) {
+				node->set_child(i, load(fp, param));
+			}
+		}
+		else {
+			// load label
+			node->label_.resize(param.label_size());
+			fread(node->label_.data(), sizeof(float), node->label_.size(), fp);
+		}
+		return node;
+	}
+
+	// save the param, and the tree
+	void DecisionTree::save(FILE *fp, bool with_param) {
+		/* save param */
+		if (with_param) param.save(fp);
+		/* save tree */
+		if (root) root->save(fp);
 	}
 
 	// load a decision tree
-	DecisionTree DecisionTree::load(FILE *fp) {
+	DecisionTree DecisionTree::load(FILE *fp, bool with_param) {
 		DecisionTree tree;
+		/* load param */
+		if (with_param) tree.param = Param::load(fp);
+		Param *global_param = new Param(tree.param);
+
+		/* load tree */
+		tree.root = TreeNode::load(fp, *global_param);
 		return tree;
 	}
 }

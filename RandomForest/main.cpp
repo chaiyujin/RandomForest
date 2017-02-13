@@ -8,9 +8,10 @@ int main() {
 	//check_criterion();
 	//check_random();
 	//check_split();
-	check_tree_1();
+	//check_tree_1();
 	//check_foreset_1();
 	//check_load();
+	check_load_forest();
 
 	return 0;
 }

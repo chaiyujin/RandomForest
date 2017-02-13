@@ -94,4 +94,31 @@ namespace Yuki {
 		return res;
 	}
 
+	void RandomForest::save(const char *file_name) {
+		FILE *fp;
+		fopen_s(&fp, file_name, "wb");
+		// save param
+		param.save(fp);
+		// save trees
+		Range(i, trees.size()) {
+			trees[i].save(fp);
+		}
+		fclose(fp);
+	}
+	
+	RandomForest RandomForest::load(const char *file_name) {
+		RandomForest forest;
+		// open
+		FILE *fp;
+		fopen_s(&fp, file_name, "rb");
+		// load param
+		forest.param = Param::load(fp);
+
+		// load trees
+		Range(i, forest.param.trees()) {
+			forest.trees.emplace_back(std::move(DecisionTree::load(fp)));
+		}
+		fclose(fp);
+		return forest;
+	}
 }

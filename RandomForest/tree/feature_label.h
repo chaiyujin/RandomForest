@@ -48,6 +48,10 @@ namespace Yuki {
 			return v[index];
 		}
 		size_t size() const { return v.size(); }
+		void resize(int size) { v.resize(size); }
+
+		T *data() { return v.data(); }
+		const T *data() const { return v.data(); }
 
 		void zeros(int size) {
 			v.resize(size);
@@ -82,7 +86,12 @@ namespace Yuki {
 			return true;
 		}
 
+		T *data() { return v.data(); }
+		const T *data() const { return v.data(); }
+
 		size_t size() const { return v.size(); }
+		void resize(int size) { v.resize(size); }
+
 		void zeros(int size) {
 			v.resize(size);
 			memset(v.data(), 0, sizeof(T) * size);
@@ -100,7 +109,7 @@ namespace Yuki {
 #define CMP_FEATURE(i) \
 		if (mask[i]) {if (f0[i] < f1[i]) return true;\
 		else if (f0[i] > f1[i]) return false;}
-
+	
 		CMP_FEATURE(dim);
 
 		int delta = std::max(dim, (int)f0.size() - dim - 1);
