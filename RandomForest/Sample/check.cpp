@@ -338,12 +338,12 @@ void check_load() {
 
 void check_load_forest() {
 	Param param("Sample/config.cfg");
-	auto tuples = read_data("Sample/X.bin", "Sample/Y.bin", param);
+	auto tuples_all = read_data("Sample/X.bin", "Sample/Y.bin", param);
 
-	/*DataSet tuples;
+	DataSet tuples;
 	Range(i, 50) {
 		tuples.emplace_back(tuples_all[i]);
-	}*/
+	}
 
 	{
 		RandomForest forest(param);

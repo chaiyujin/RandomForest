@@ -303,10 +303,9 @@ namespace Yuki {
 	}
 
 	// load a decision tree
-	void DecisionTree::load(DecisionTree *tree, FILE *fp, bool with_param) {
+	void DecisionTree::load(DecisionTree *tree, FILE *fp) {
 		/* load param */
-		if (with_param) Param::load(&tree->param, fp);
-		//Param *global_param = new Param(tree.param);
+		Param::load(&tree->param, fp);
 
 		/* load tree */
 		tree->root = TreeNode::load(fp, tree->param);

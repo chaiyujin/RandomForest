@@ -42,7 +42,10 @@ namespace Yuki {
 				CHECK(label_size_ != -1);
 
 				// update tree feature size for forest
-				if (tree_feature_size_ == 0) tree_feature_size_ = feature_size_;
+				if (tree_feature_size_ == 0 ||
+					tree_feature_size_ > feature_size_) {
+					tree_feature_size_ = feature_size_;
+				}
 
 				// default mask as true, all features work
 				mask_.resize(feature_size_);

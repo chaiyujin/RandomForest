@@ -23,7 +23,6 @@ namespace Yuki {
 		}
 
 		TreeNode *which_child(const DFeature &query_feature) {
-			LOG::error("Size %u %u\n", query_feature.size(), mask_.size());
 			if (less_than(query_feature, split_feature_, split_dim_, mask_))
 				return children[LEFT_CHILD];
 			else 
@@ -136,7 +135,7 @@ namespace Yuki {
 		// save the param, and the tree
 		void save(FILE *fp, bool with_param = true);
 		// load a decision tree
-		static void load(DecisionTree *tree, FILE *fp, bool with_param = true);
+		static void load(DecisionTree *tree, FILE *fp);
 		
 
 		int debug_count_leaves() {

@@ -13,9 +13,10 @@ namespace Yuki {
 	}
 
 	void RandomForest::init() {
+		LOG::log("Creating Random Forest...\n");
 		// construct several trees
-
 		Range(i, param.trees()) {
+			LOG::log("Creating tree %d\n", i);
 			// random pick several features for tree
 			Mask mask;
 			mask.resize(param.feature_size());
@@ -107,6 +108,7 @@ namespace Yuki {
 	}
 	
 	void RandomForest::load(RandomForest *forest, const char *file_name) {
+		LOG::log("Loading Random Forest...\n");
 		// open
 		FILE *fp;
 		fopen_s(&fp, file_name, "rb");
@@ -115,8 +117,9 @@ namespace Yuki {
 
 		// load trees
 		forest->trees.clear();
+		// must resize first, push_back() will change address.
+		forest->trees.resize(forest->param.trees()); 
 		Range(i, forest->param.trees()) {
-			forest->trees.push_back(DecisionTree());
 			DecisionTree::load(&forest->trees[i], fp);
 		}
 		fclose(fp);
