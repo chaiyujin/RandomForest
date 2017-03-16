@@ -9,6 +9,9 @@ namespace Yuki {
 		/* for data */
 		FWriteInt(feature_size_);
 		FWriteInt(label_size_);
+		FWriteInt(feature_types_);
+		FWriteInt(max_category_sets_);
+		FWriteInt(min_category_sets_);
 
 		/* for forest */
 		FWriteInt(trees_);
@@ -43,6 +46,9 @@ namespace Yuki {
 		/* for data */
 		FReadInt(feature_size_);
 		FReadInt(label_size_);
+		FReadInt(feature_types_);
+		FReadInt(max_category_sets_);
+		FReadInt(min_category_sets_);
 
 		/* for forest */
 		FReadInt(trees_);

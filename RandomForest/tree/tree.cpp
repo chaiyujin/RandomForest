@@ -176,6 +176,7 @@ namespace Yuki {
 				// split
 				node->set_split_feature(pre_calc_best_feature);
 				node->set_split_dim(pre_calc_best_dim);
+				node->set_split_set_mask(pre_calc_best_set_mask);
 			}
 			else {
 				node = make_leaf();
@@ -202,6 +203,7 @@ namespace Yuki {
 		if (pre_calc_succ) {
 			new (&pre_calc_best_feature) DFeature(splitter.best_split_feature());
 			pre_calc_best_dim = splitter.best_dim();
+			pre_calc_best_set_mask = splitter.best_set_mask();
 			pre_best_improvement = splitter.best_improvement();
 			// bigger improvement better
 			priority = -pre_best_improvement;
@@ -253,6 +255,7 @@ namespace Yuki {
 			// save feature and dim
 			fwrite(&split_dim_, sizeof(int), 1, fp);
 			fwrite(split_feature_.data(), sizeof(int), split_feature_.size(), fp);
+			fwrite(split_set_mask_.data(), sizeof(unsigned char), split_set_mask_.size(), fp);
 
 			// save children
 			Range(i, CHILDREN_NUM) {
@@ -280,6 +283,8 @@ namespace Yuki {
 			fread(&node->split_dim_, sizeof(int), 1, fp);
 			node->split_feature_.resize(param.feature_size());
 			fread(node->split_feature_.data(), sizeof(int), node->split_feature_.size(), fp);
+			node->split_set_mask_.resize(param.feature_types());
+			fread(node->split_set_mask_.data(), sizeof(unsigned char), node->split_set_mask_.size(), fp);
 
 			// load children
 			Range(i, CHILDREN_NUM) {

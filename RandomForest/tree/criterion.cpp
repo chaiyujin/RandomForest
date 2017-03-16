@@ -49,6 +49,11 @@ namespace Yuki {
 		reset();
 	}
 
+	void Criterion::sort(int dim, const SetMask &set_mask) {
+		std::sort(tuples.begin(), tuples.end(), SetSorter(dim, set_mask, param.mask()));
+		reset();
+	}
+
 	double Criterion::impurity() {
 		double ret = sq_sum_total / weighted_n_total;
 

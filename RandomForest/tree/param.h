@@ -10,6 +10,7 @@ namespace Yuki {
 #define REGRESSION 1
 	
 	typedef std::vector<bool> Mask;
+	typedef std::vector<unsigned char> SetMask;
 	class Param {
 	public:
 		
@@ -21,6 +22,7 @@ namespace Yuki {
 			  min_leaf_samples_(1), // at least 1 sample on a leaf
 			  split_limit_(0), // no split limit
 			  feature_size_(-1), label_size_(-1), // must define
+			  min_category_sets_(2), max_category_sets_(-1),
 			  iterations_(1) // default 1 iteration 
 		{
 			if (cfg_file) {
@@ -36,7 +38,9 @@ namespace Yuki {
 				config.get("TREES", trees_);
 				config.get("TREE_FEATURE_SIZE", tree_feature_size_);
 				config.get("BOOTSTRAP", bootstrap_);
-
+				config.get("FEATURE_TYPES", feature_types_);
+				config.get("MAX_CATEGORY_SETS", max_category_sets_);
+				config.get("MIN_CATEGORY_SETS", min_category_sets_);
 				// must config
 				CHECK(feature_size_ != -1);
 				CHECK(label_size_ != -1);
@@ -66,7 +70,9 @@ namespace Yuki {
 		int label_size()		const { return label_size_; }
 		int iterations()		const { return iterations_; }
 		int split_limit()		const { return split_limit_; }
-
+		int feature_types()		const { return feature_types_; }
+		int max_category_sets()	const { return max_category_sets_; }
+		int min_category_sets() const { return min_category_sets_; }
 		const Mask &mask()		const { return mask_; }
 
 		// set mask for tree
@@ -95,6 +101,9 @@ namespace Yuki {
 		/* for data */
 		int feature_size_;
 		int label_size_;
+		int feature_types_;
+		int min_category_sets_;
+		int max_category_sets_;
 
 		/* for train */
 		int iterations_;

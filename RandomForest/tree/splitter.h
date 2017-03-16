@@ -18,6 +18,7 @@ namespace Yuki {
 
 		int best_dim() { return best_dim_; }
 		int best_pos() { return best_pos_; }
+		SetMask best_set_mask() { return best_set_mask_; }
 		double best_improvement() { return best_improvement_; }
 
 		DFeature best_split_feature() { return best_split_feature_; }
@@ -27,6 +28,7 @@ namespace Yuki {
 		const Param &param;
 		int best_pos_;
 		int best_dim_;
+		SetMask best_set_mask_;
 		DFeature best_split_feature_;
 		double best_improvement_;
 

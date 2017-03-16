@@ -17,8 +17,10 @@ namespace Yuki {
 
 		virtual ~Criterion() {}
 
-		// sort features by dim
+		// sort features by dim (for numeric)
 		void sort(int dim);
+		// sort features by dim and set mask (for category)
+		void sort(int dim, const SetMask &set_mask);
 		// update the split position, it's better to update in one direction
 		void update(int new_pos);
 

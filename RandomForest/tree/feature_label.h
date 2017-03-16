@@ -123,6 +123,25 @@ namespace Yuki {
 		return false;
 	}
 
+	template <class T>
+	inline bool less_than(const Feature<T> &f0, const Feature<T> &f1, int dim, const SetMask &set_split, const Mask &mask) {
+#define CMP_FEATURE(i) \
+		if (mask[i]) {if (set_split[f0[i]] < set_split[f1[i]]) return true;\
+		else if (set_split[f0[i]] > set_split[f1[i]]) return false;}
+
+		CMP_FEATURE(dim);
+
+		int delta = std::max(dim, (int)f0.size() - dim - 1);
+		for (int i = 1; i <= delta; ++i) {
+			int j = dim - i;
+			if (j >= 0) CMP_FEATURE(j);
+			j = dim + i;
+			if (j < f0.size()) CMP_FEATURE(j);
+		}
+#undef CMP_FEATURE
+		return false;
+	}
+
 	/* define the data feature and label */
 	typedef Feature<int> DFeature;
 	typedef Label<float> DLabel;
@@ -144,6 +163,7 @@ namespace Yuki {
 		Tuple &operator=(const Tuple &) = delete;
 	};
 
+	// sort by feature id ( for numeric feature )
 	class TupleSorter {
 	public:
 		TupleSorter(int i, const Mask &mask) : dim(i), mask(mask) {}
@@ -153,6 +173,20 @@ namespace Yuki {
 	private:
 		int dim;
 		const Mask &mask;
+	};
+
+	// sort by set (split categoric feature into several sets)
+	class SetSorter {
+	public:
+		SetSorter(int i, const SetMask &set_split, const Mask &mask)
+			: dim(i), set_split(set_split), mask(mask) {}
+		bool operator()(Tuple *const &t0, Tuple *const &t1) {
+			return less_than(t0->X, t1->X, dim, set_split, mask);
+		}
+	private:
+		int dim;
+		const SetMask set_split;
+		const Mask mask;
 	};
 
 	typedef std::vector<Tuple *> DataSet;

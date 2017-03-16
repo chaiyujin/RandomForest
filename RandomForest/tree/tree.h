@@ -23,7 +23,7 @@ namespace Yuki {
 		}
 
 		TreeNode *which_child(const DFeature &query_feature) {
-			if (less_than(query_feature, split_feature_, split_dim_, mask_))
+			if (less_than(query_feature, split_feature_, split_dim_, split_set_mask_, mask_))
 				return children[LEFT_CHILD];
 			else 
 				return children[RIGHT_CHILD];
@@ -35,7 +35,8 @@ namespace Yuki {
 		void set_depth(int d) { depth_ = d; }
 		void set_child(int i, TreeNode *p) { children[i] = p; }
 		void set_father(TreeNode *p) { father_ = p; }
-		void set_split_feature(const DFeature &f) { new (&split_feature_) DFeature(f); }
+		void set_split_feature(const DFeature &f) { split_feature_ = f; }
+		void set_split_set_mask(const SetMask &mask) { split_set_mask_ = mask; }
 		void set_split_dim(int dim) { split_dim_ = dim; }
 		void set_label(const DLabel &l) { new (&label_) DLabel(l); }
 
@@ -65,6 +66,7 @@ namespace Yuki {
 		// for non-leaf to determine which child
 		DFeature split_feature_;
 		int      split_dim_;
+		SetMask  split_set_mask_;
 		// for leaf, the representation label
 		DLabel label_;
 
@@ -107,6 +109,7 @@ namespace Yuki {
 		bool pre_calc_succ;
 		DFeature pre_calc_best_feature;
 		int pre_calc_best_dim;
+		SetMask pre_calc_best_set_mask;
 		double pre_best_improvement;
 
 		void pre_calc();
