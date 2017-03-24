@@ -32,7 +32,7 @@ namespace Yuki {
 		DFeature best_split_feature_;
 		double best_improvement_;
 
-		Criterion criterion;
+		Criterion *criterion;
 		Random random;
 
 	};

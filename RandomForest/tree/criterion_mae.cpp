@@ -3,7 +3,7 @@
 
 namespace Yuki {
 
-	Criterion::Criterion(DataSet& data, const Param &param, double all_samples_weight)
+	CriterionMAE::CriterionMAE(DataSet& data, const Param &param, double all_samples_weight)
 		: tuples(data), param(param), weighted_all_samples(all_samples_weight),
 		  sum_total(param.label_size()), sum_left(param.label_size()), sum_right(param.label_size()) {
 		// default weight -1, means no weight.
@@ -12,7 +12,7 @@ namespace Yuki {
 		init();
 	}
 
-	void Criterion::init() {
+	void CriterionMAE::init() {
 		reset();
 		
 		// zeros total sum
@@ -34,7 +34,7 @@ namespace Yuki {
 		}
 	}
 
-	void Criterion::reset() {
+	void CriterionMAE::reset() {
 		// reset the position
 		pos = 0;
 
@@ -44,17 +44,17 @@ namespace Yuki {
 		weighted_n_left = weighted_n_right = 0;
 	}
 
-	void Criterion::sort(int dim) {
+	void CriterionMAE::sort(int dim) {
 		std::sort(tuples.begin(), tuples.end(), TupleSorter(dim, param.mask()));
 		reset();
 	}
 
-	void Criterion::sort(int dim, const SetMask &set_mask) {
+	void CriterionMAE::sort(int dim, const SetMask &set_mask) {
 		std::sort(tuples.begin(), tuples.end(), SetSorter(dim, set_mask, param.mask()));
 		reset();
 	}
 
-	double Criterion::impurity() {
+	double CriterionMAE::impurity() {
 		double ret = sq_sum_total / weighted_n_total;
 
 		Range(k, param.label_size()) {
@@ -66,7 +66,7 @@ namespace Yuki {
 		return ret;
 	}
 
-	std::pair<double, double> Criterion::children_impurity() {
+	std::pair<double, double> CriterionMAE::children_impurity() {
 		std::pair<double, double> ret;
 
 		double sq_sum_left = 0;
@@ -95,7 +95,7 @@ namespace Yuki {
 		return ret;
 	}
 
-	void Criterion::update(int new_pos) {
+	void CriterionMAE::update(int new_pos) {
 		if (new_pos == pos) return;
 
 		int f, l, r;
@@ -123,7 +123,7 @@ namespace Yuki {
 		pos = new_pos;
 	}
 
-	double Criterion::impurity_improvement() {
+	double CriterionMAE::impurity_improvement() {
 		double imp = impurity();
 		std::pair<double, double> ch_imp = children_impurity();
 		return ((weighted_n_total / weighted_all_samples) *
@@ -131,7 +131,7 @@ namespace Yuki {
 					 - (weighted_n_right / weighted_n_total * ch_imp.second)));
 	}
 
-	double Criterion::proxy_impurity_improvement() const {
+	double CriterionMAE::proxy_impurity_improvement() const {
 		double proxy_left = 0;
 		double proxy_right = 0;
 

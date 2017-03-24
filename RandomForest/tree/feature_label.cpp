@@ -72,6 +72,8 @@ namespace Yuki {
 		FILE *x_fp;
 		fopen_s(&x_fp, feat_file_name, "rb");
 
+		LOG::notice("Feature size: %d\n", param.feature_size());
+
 		// begin to read
 		int tuple_cnt = 0;
 		while (true) {
@@ -83,6 +85,7 @@ namespace Yuki {
 				delete tuple;
 				if (x_size) {
 					// bad situation
+					LOG::notice("Left %d\n", x_size);
 					error_exit("Data size is not correct!");
 				}
 				// eof

@@ -75,6 +75,9 @@
     <ClInclude Include="utils\timer.h">
       <Filter>Header Files\utils</Filter>
     </ClInclude>
+    <ClInclude Include="tree\median.h">
+      <Filter>Header Files\tree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="utils\log.cpp">
@@ -92,9 +95,6 @@
     <ClCompile Include="tree\feature_label.cpp">
       <Filter>Source Files\tree</Filter>
     </ClCompile>
-    <ClCompile Include="tree\criterion.cpp">
-      <Filter>Source Files\tree</Filter>
-    </ClCompile>
     <ClCompile Include="Sample\check.cpp">
       <Filter>Source Files\check</Filter>
     </ClCompile>
@@ -109,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="utils\timer.cpp">
       <Filter>Source Files\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="tree\criterion_mse.cpp">
+      <Filter>Source Files\tree</Filter>
+    </ClCompile>
+    <ClCompile Include="tree\median.cpp">
+      <Filter>Source Files\tree</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

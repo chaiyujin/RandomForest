@@ -39,13 +39,13 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -146,8 +146,9 @@
     <ClCompile Include="forest\random_forest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sample\check.cpp" />
-    <ClCompile Include="tree\criterion.cpp" />
+    <ClCompile Include="tree\criterion_mse.cpp" />
     <ClCompile Include="tree\feature_label.cpp" />
+    <ClCompile Include="tree\median.cpp" />
     <ClCompile Include="tree\param.cpp" />
     <ClCompile Include="tree\splitter.cpp" />
     <ClCompile Include="tree\tree.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="Sample\check.h" />
     <ClInclude Include="tree\criterion.h" />
     <ClInclude Include="tree\feature_label.h" />
+    <ClInclude Include="tree\median.h" />
     <ClInclude Include="tree\param.h" />
     <ClInclude Include="tree\splitter.h" />
     <ClInclude Include="tree\tree.h" />
