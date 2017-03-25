@@ -16,7 +16,7 @@ namespace Yuki {
 		virtual void sort(int dim) = 0;
 		virtual void sort(int dim, const SetMask &set_mask) = 0;
 		virtual void update(int new_pos) = 0;
-		virtual double proxy_impurity_improvement() const = 0;
+		virtual double proxy_impurity_improvement() = 0;
 		virtual double impurity_improvement() = 0;
 	};
 	
@@ -35,7 +35,7 @@ namespace Yuki {
 		// update the split position, it's better to update in one direction
 		void update(int new_pos);
 
-		double proxy_impurity_improvement() const;
+		double proxy_impurity_improvement();
 		double impurity_improvement();
 
 		// call once for the real improvement calculation
@@ -80,7 +80,7 @@ namespace Yuki {
 		// update the split position, it's better to update in one direction
 		void update(int new_pos);
 
-		double proxy_impurity_improvement() const;
+		double proxy_impurity_improvement();
 		double impurity_improvement();
 
 		// call once for the real improvement calculation
@@ -98,9 +98,9 @@ namespace Yuki {
 		int pos;
 
 		// for impurity
-		double sq_sum_total;
-		std::vector<double> sum_total;
-		std::vector<double> sum_left, sum_right;
+		std::vector<double> node_average;
+		std::vector<double> sum_left;
+		std::vector<double> sum_right;
 		double weighted_n_total;
 		double weighted_n_left, weighted_n_right;
 

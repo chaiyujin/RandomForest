@@ -50,6 +50,7 @@ namespace Yuki {
 					tree_feature_size_ > feature_size_) {
 					tree_feature_size_ = feature_size_;
 				}
+				split_limit_ = min_leaf_samples_ * 2;
 
 				// default mask as true, all features work
 				mask_.resize(feature_size_);

@@ -131,7 +131,7 @@ namespace Yuki {
 					 - (weighted_n_right / weighted_n_total * ch_imp.second)));
 	}
 
-	double CriterionMSE::proxy_impurity_improvement() const {
+	double CriterionMSE::proxy_impurity_improvement() {
 		double proxy_left = 0;
 		double proxy_right = 0;
 

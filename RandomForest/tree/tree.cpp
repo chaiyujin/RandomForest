@@ -41,7 +41,7 @@ namespace Yuki {
 		// first make the root
 		root = nullptr;
 		{
-			GrowJob *job = new GrowJob(tuples, param, nullptr, 0, 0);
+			GrowJob *job = new GrowJob(tuples, param, tuples.size(), nullptr, 0, 0);
 			job_queue.push(job);
 		}
 		// work on the queue until max_leaves or empty queue
@@ -88,7 +88,7 @@ namespace Yuki {
 	bool DecisionTree::dfs_grow() {
 		bool succ = true;
 
-		GrowJob *job = new GrowJob(tuples, param, nullptr, 0, 0);
+		GrowJob *job = new GrowJob(tuples, param, tuples.size(), nullptr, 0, 0);
 		dfs(job);
 
 		return succ;
@@ -153,7 +153,7 @@ namespace Yuki {
 		TreeNode *node = nullptr;
 
 		if ((param.max_depth() > 0 && depth >= param.max_depth()) || // reach the max depth
-			tuples.size() < param.split_limit()/* no enough to split */) {
+			tuples.size() < param.split_limit() /* no enough to split */) {
 			node = make_leaf();
 		}
 		else {
@@ -166,8 +166,8 @@ namespace Yuki {
 			if (pre_calc_succ) {
 				// split the node, add new jobs
 				// small impurity first (smaller priority)
-				GrowJob *left_job = new GrowJob(set_left, param, node, LEFT_CHILD, depth + 1);
-				GrowJob *right_job = new GrowJob(set_right, param, node, RIGHT_CHILD, depth + 1);
+				GrowJob *left_job = new GrowJob(set_left, param, all_tuples_number, node, LEFT_CHILD, depth + 1);
+				GrowJob *right_job = new GrowJob(set_right, param, all_tuples_number, node, RIGHT_CHILD, depth + 1);
 				left_job->pre_calc();
 				right_job->pre_calc();
 				children_jobs.emplace_back(left_job);
@@ -198,7 +198,7 @@ namespace Yuki {
 
 	void GrowJob::pre_calc() {
 		// new a split
-		Splitter splitter(tuples, param);
+		Splitter splitter(tuples, param, all_tuples_number);
 		pre_calc_succ = splitter.split_best(set_left, set_right);
 		if (pre_calc_succ) {
 			new (&pre_calc_best_feature) DFeature(splitter.best_split_feature());

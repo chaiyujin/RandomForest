@@ -3,12 +3,15 @@
 namespace Yuki {
 	Splitter::Splitter(DataSet &data, const Param &param, double all_samples_weight)
 		: tuples(data), param(param), best_pos_(-1), best_dim_(-1) {
+
 		criterion = new CriterionMSE(data, param, all_samples_weight);
+
 	}
 
 	bool Splitter::split_best(DataSet &set_a, DataSet &set_b) {
 		bool found = false;
 		double best_proxy = -DBL_MAX;
+
 
 		// find best test of several iterations
 		Range(itr, param.iterations()) {
@@ -61,6 +64,20 @@ namespace Yuki {
 					found = true;
 				}
 			}
+			/*{
+				int pos = random.random<int>(tuples.size() - param.min_leaf_samples() * 2) + param.min_leaf_samples();
+				if (pos < param.min_leaf_samples() || pos + param.min_leaf_samples() > tuples.size()) continue;
+				criterion->update(pos);
+				double proxy = criterion->proxy_impurity_improvement();
+
+				if (proxy > best_proxy) {
+					best_proxy = proxy;
+					best_pos_ = pos;
+					best_dim_ = dim;
+					best_set_mask_ = set_mask;
+					found = true;
+				}
+			}*/
 		}
 
 		// if sort is stable

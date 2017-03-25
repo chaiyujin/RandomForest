@@ -78,10 +78,12 @@ namespace Yuki {
 	public:
 		GrowJob(const DataSet &data_set,
 				const Param &param,
+				double all_tuples_number,
 				TreeNode *father, int child_idx,
 				int depth, double priority = DBL_MAX)
 			: priority(priority),
 			  tuples(data_set), param(param),
+			  all_tuples_number(all_tuples_number),
 			  father(father), child_idx(child_idx),
 			  depth(depth), 
 			  pre_calced(false), pre_calc_succ(false) {}
@@ -98,6 +100,7 @@ namespace Yuki {
 
 		DataSet tuples;
 		const Param &param;
+		double all_tuples_number;
 		// to complete the father pointer
 		TreeNode *father;
 		int child_idx;

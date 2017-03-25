@@ -146,6 +146,7 @@
     <ClCompile Include="forest\random_forest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sample\check.cpp" />
+    <ClCompile Include="tree\criterion_mae.cpp" />
     <ClCompile Include="tree\criterion_mse.cpp" />
     <ClCompile Include="tree\feature_label.cpp" />
     <ClCompile Include="tree\median.cpp" />

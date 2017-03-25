@@ -25,6 +25,7 @@ int main(int argc, char **argv) {
 		}
 
 		forest.save(save_path.c_str());
+		//system("pause");
 	}
 
 	// predict

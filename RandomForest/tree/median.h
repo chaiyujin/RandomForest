@@ -43,16 +43,20 @@ namespace Yuki {
 		int remove(double data, double w);
 		int pop(double &data, double &w);
 		double get_median() {
+			printf("k %d\n", k);
 			if (sum_w_0_k == total_weight / 2.0) {
+				printf("k, k-1\n");
 				return (samples.value_at(k) + 
 					    samples.value_at(k - 1)) / 2.0;
 			}
 			else if (sum_w_0_k > total_weight / 2.0) {
+				printf("k-1\n");
 				return samples.value_at(k - 1);
 			}
 			else {
 				CHECK(0);
 			}
+			return 0;
 		}
 		
 
